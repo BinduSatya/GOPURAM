@@ -66,7 +66,6 @@ export async function signup(req, res) {
     });
 
     res.status(201).json({ success: true, user: newUser });
-
   } catch (error) {
     console.log("Error in signup controller", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -115,23 +114,15 @@ export async function onboard(req, res) {
   try {
     const userId = req.user._id;
 
-    const { fullName, bio, nativeLanguage, learningLanguage, location } =
-      req.body;
+    const { fullName, bio, learningSkill, location } = req.body;
 
-    if (
-      !fullName ||
-      !bio ||
-      !nativeLanguage ||
-      !learningLanguage ||
-      !location
-    ) {
+    if (!fullName || !bio || !learningSkill || !location) {
       return res.status(400).json({
         message: "All fields are required",
         missingFields: [
           !fullName && "fullName",
           !bio && "bio",
-          !nativeLanguage && "nativeLanguage",
-          !learningLanguage && "learningLanguage",
+          !learningSkill && "learningSkill",
           !location && "location",
         ].filter(Boolean),
       });

@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
-import { BellIcon, HomeIcon, ShipWheelIcon, UsersIcon } from "lucide-react";
+import { BellIcon, FerrisWheel, HomeIcon, ShipWheelIcon, UsersIcon, Video } from "lucide-react";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
+// const authUser = null;
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -13,7 +14,7 @@ const Sidebar = () => {
         <Link to="/" className="flex items-center gap-2.5">
           <ShipWheelIcon className="size-9 text-primary" />
           <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary  tracking-wider">
-            Streamify
+            GOPURAM
           </span>
         </Link>
       </div>
@@ -47,6 +48,25 @@ const Sidebar = () => {
         >
           <BellIcon className="size-5 text-base-content opacity-70" />
           <span>Notifications</span>
+        </Link>
+        <Link
+          to="/memories"
+          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+            currentPath === "/memories" ? "btn-active" : ""
+          }`}
+        >
+          <FerrisWheel className="size-5 text-base-content opacity-70" />
+          <span>Memories</span>
+        </Link>
+        <Link
+          to="/video-calls"
+          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+            currentPath === "/video-calls" ? "btn-active" : ""
+          }`}
+        >
+          {" "}
+          <Video className="size-5 text-base-content opacity-70" />
+          <span>Make a Call</span>
         </Link>
       </nav>
 

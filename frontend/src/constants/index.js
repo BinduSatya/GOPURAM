@@ -1,3 +1,5 @@
+// base, primary, secondary, accent, neutral, info, success, warning, error
+
 export const THEMES = [
   {
     name: "light",

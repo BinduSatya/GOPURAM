@@ -14,7 +14,9 @@ import PageLoader from "./components/PageLoader.jsx";
 import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
-import {FriendsPage} from "./pages/FriendsPage.jsx";
+import FriendsPage from "./pages/FriendsPage.jsx";
+import MemoriesPage from "./pages/MemoriesPage.jsx";
+import VideoCallPage from "./pages/VideoCallPage.jsx";
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
@@ -26,7 +28,7 @@ const App = () => {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="h-screen" data-theme={theme}>
+    <div className="" data-theme={theme}>
       <Routes>
         <Route
           path="/"
@@ -78,6 +80,30 @@ const App = () => {
             isAuthenticated && isOnboarded ? (
               <Layout showSidebar={true}>
                 <FriendsPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+        />
+        <Route
+          path="/memories"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar={true}>
+                <MemoriesPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+        />
+        <Route
+          path="/video-calls"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar={true}>
+                <VideoCallPage />
               </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />

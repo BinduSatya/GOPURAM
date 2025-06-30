@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: 0;
+  padding: 0;
+  margin: 0;
+}
+
 .str-chat__channel {
   display: flex;
   align-items: center;

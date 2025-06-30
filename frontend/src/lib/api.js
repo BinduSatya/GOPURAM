@@ -2,6 +2,7 @@ import { axiosInstance } from "./axios";
 
 export const signup = async (signupData) => {
   const response = await axiosInstance.post("/auth/signup", signupData);
+  console.log("response is", response);
   return response.data;
 };
 
@@ -56,7 +57,9 @@ export async function getFriendRequests() {
 }
 
 export async function acceptFriendRequest(requestId) {
-  const response = await axiosInstance.put(`/users/friend-request/${requestId}/accept`);
+  const response = await axiosInstance.put(
+    `/users/friend-request/${requestId}/accept`
+  );
   return response.data;
 }
 
@@ -64,3 +67,10 @@ export async function getStreamToken() {
   const response = await axiosInstance.get("/chat/token");
   return response.data;
 }
+// /users/friend-requests
+// /users/memories-form
+
+export const postMemory = async (memoryData) => {
+  const response = await axiosInstance.post("/users/memories-form", memoryData);
+  return response;
+};

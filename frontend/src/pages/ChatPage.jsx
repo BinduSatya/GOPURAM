@@ -45,7 +45,7 @@ const ChatPage = () => {
 
         const client = StreamChat.getInstance(STREAM_API_KEY);
 
-        await client.connectUser(
+        const user = await client.connectUser(
           {
             id: authUser._id,
             name: authUser.fullName,
@@ -53,6 +53,8 @@ const ChatPage = () => {
           },
           tokenData.token
         );
+
+        console.log("user", user);
 
         //
         const channelId = [authUser._id, targetUserId].sort().join("-");
@@ -95,10 +97,10 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="h-[93vh]">
+    <div className="h-[87vh]">
       <Chat client={chatClient}>
         <Channel channel={channel}>
-          <div className="w-full relative">
+          <div className="w-full relative h-full">
             <CallButton handleVideoCall={handleVideoCall} />
             <Window>
               <ChannelHeader />

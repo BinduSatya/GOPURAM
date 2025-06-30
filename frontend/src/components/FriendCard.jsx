@@ -33,12 +33,14 @@ const FriendCard = ({ friend }) => {
 
         <div className="flex flex-wrap gap-1.5 mb-3">
           <span className="badge badge-secondary text-xs">
-            {getLanguageFlag(friend.nativeLanguage)}
-            Native: {friend.nativeLanguage}
+            {/* {getLanguageFlag(friend.nativeLanguage)}
+            Native: {friend.nativeLanguage} */}
+            Location: {friend.location || "Warangal"}
           </span>
           <span className="badge badge-outline text-xs">
-            {getLanguageFlag(friend.learningLanguage)}
-            Learning: {friend.learningLanguage}
+            {/* {getLanguageFlag(friend.learningLanguage)}
+            Learning: {friend.learningLanguage} */}
+            Learning: {friend.learningSkill || "Reading"}
           </span>
         </div>
 
