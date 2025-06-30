@@ -10,11 +10,18 @@ import userRoutes from "./routes/user.route.js";
 import chatRoutes from "./routes/chat.route.js";
 
 import { connectDB } from "./lib/db.js";
+import { log } from "console";
 
 const app = express();
 const PORT = process.env.PORT;
 
 const __dirname = path.resolve();
+console.log(`__dirname: ${path.join(__dirname, "/public")}`);
+
+app.use(express.static(path.join(__dirname, "/public")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+});
 
 app.use(
   cors({
