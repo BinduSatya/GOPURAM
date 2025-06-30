@@ -10,7 +10,6 @@ import userRoutes from "./routes/user.route.js";
 import chatRoutes from "./routes/chat.route.js";
 
 import { connectDB } from "./lib/db.js";
-import { log } from "console";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -25,7 +24,7 @@ app.get("*", (req, res) => {
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://gopuram.vercel.app/",
     credentials: true, // allow frontend to send cookies
   })
 );
