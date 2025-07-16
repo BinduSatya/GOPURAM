@@ -16,6 +16,7 @@ router.post("/logout", logout);
 router.post("/onboarding", protectRoute, onboard);
 
 router.get("/me", protectRoute, (req, res) => {
+  console.log("User details:", req.user);
   res.status(200).json({ success: true, user: req.user });
 });
 

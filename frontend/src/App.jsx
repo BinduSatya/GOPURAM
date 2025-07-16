@@ -11,21 +11,48 @@ import OnboardingPage from "./pages/OnboardingPage.jsx";
 import { Toaster } from "react-hot-toast";
 
 import PageLoader from "./components/PageLoader.jsx";
-import useAuthUser from "./hooks/useAuthUser.js";
+// import useAuthUser from "./hooks/useAuthUser.js";
+
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
+import { useAuthStore } from "./store/useAuthStore.js";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import MemoriesPage from "./pages/MemoriesPage.jsx";
 import VideoCallPage from "./pages/VideoCallPage.jsx";
+import { useEffect } from "react";
 
 const App = () => {
-  const { isLoading, authUser } = useAuthUser();
   const { theme } = useThemeStore();
+  const {
+    isAuthenticated,
+    isOnboarded,
+    isLoading,
+    isCheckingAuth,
+    authUser,
+    checkAuth,
+  } = useAuthStore();
 
-  const isAuthenticated = Boolean(authUser);
-  const isOnboarded = authUser?.isOnboarded;
+  useEffect(() => {
+    if (isLoading) return <PageLoader />;
+    checkAuth();
+  }, []);
 
-  if (isLoading) return <PageLoader />;
+  console.log(
+    "authUser is",
+    authUser,
+    "isAuthenticated",
+    isAuthenticated,
+    "isOnboarded",
+    isOnboarded,
+    "isLoading",
+    isLoading,
+    "isCheckingAuth",
+    isCheckingAuth
+  );
+
+  if (isLoading || isCheckingAuth) {
+    return <PageLoader />;
+  }
 
   return (
     <div className="" data-theme={theme}>

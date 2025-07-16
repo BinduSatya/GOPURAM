@@ -8,7 +8,7 @@ import {
   getRecommendedUsers,
   sendFriendRequest,
 } from "../controllers/user.controller.js";
-import TripMemory from "../models/TripMemory.js";
+import TripMemory from "../models/TripMemory.model.js";
 
 const router = express.Router();
 // import { postMemory } from "../controllers/memory.controller.js";

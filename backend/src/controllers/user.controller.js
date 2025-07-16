@@ -1,6 +1,6 @@
-import User from "../models/User.js";
-import FriendRequest from "../models/FriendRequest.js";
-import TripMemory from "../models/TripMemory.js";
+import User from "../models/User.model.js";
+import FriendRequest from "../models/FriendRequest.model.js";
+import TripMemory from "../models/TripMemory.model.js";
 
 export async function getRecommendedUsers(req, res) {
   try {
