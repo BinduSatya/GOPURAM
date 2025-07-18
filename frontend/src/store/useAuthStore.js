@@ -7,9 +7,9 @@ export const useAuthStore = create((set) => ({
   isAuthenticated: false,
   isSignedIn: false,
   isOnBoarded: false,
-  isLoading: false,
+  isLoading: true,
   isUpdatingProfile: false,
-  isCheckingAuth: false,
+  isCheckingAuth: true,
   // methods
   checkAuth: async () => {
     set({ isCheckingAuth: true, isLoading: true });
@@ -37,7 +37,7 @@ export const useAuthStore = create((set) => ({
         });
       }
     } catch (error) {
-      console.error("Error checking authentication:", error);
+      console.log("Error checking authentication:", error);
       set({ isCheckingAuth: false, isSignedIn: false, isLoading: false });
     }
   },

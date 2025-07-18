@@ -33,9 +33,11 @@ const App = () => {
   } = useAuthStore();
 
   useEffect(() => {
-    if (isLoading) return <PageLoader />;
     checkAuth();
   }, []);
+  if (isLoading || isCheckingAuth) {
+    return <PageLoader />;
+  }
 
   console.log(
     "authUser is",
@@ -151,7 +153,9 @@ const App = () => {
         <Route
           path="/chat/:id"
           element={
-            isAuthenticated && isOnboarded ? (
+            isLoading || isCheckingAuth ? (
+              <PageLoader />
+            ) : isAuthenticated && isOnboarded ? (
               <Layout showSidebar={true}>
                 <ChatPage />
               </Layout>

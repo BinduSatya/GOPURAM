@@ -27,6 +27,7 @@ export async function getRecommendedUsers(req, res) {
 export async function getUserById(req, res) {
   try {
     const userId = req.params.id;
+    console.log("backend id", userId);
     const user = await User.findById(userId)
       .select("-password -friends") // Exclude password and friends from response
       .populate("friends", "fullName profilePic learningSkill location");

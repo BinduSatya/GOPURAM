@@ -1,10 +1,17 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
-import { BellIcon, FerrisWheel, HomeIcon, ShipWheelIcon, UsersIcon, Video } from "lucide-react";
+import {
+  BellIcon,
+  FerrisWheel,
+  HomeIcon,
+  ShipWheelIcon,
+  UsersIcon,
+  Video,
+} from "lucide-react";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
-// const authUser = null;
+  // const authUser = null;
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -64,7 +71,6 @@ const Sidebar = () => {
             currentPath === "/video-calls" ? "btn-active" : ""
           }`}
         >
-          {" "}
           <Video className="size-5 text-base-content opacity-70" />
           <span>Make a Call</span>
         </Link>

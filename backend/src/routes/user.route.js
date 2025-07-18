@@ -16,7 +16,7 @@ const router = express.Router();
 router.use(protectRoute);
 
 router.get("/get-users", getRecommendedUsers);
-router.get("/get-user", getUserById);
+router.get("/get-user/:id", getUserById);
 router.get("/friends", getMyFriends);
 
 router.post("/memories-form", postMemory);

@@ -1,25 +1,29 @@
 import { Link } from "react-router";
-import { LANGUAGE_TO_FLAG } from "../constants";
+import { useAuthStore } from "../store/useAuthStore";
+// import { LANGUAGE_TO_FLAG } from "../constants";
 
-export function getLanguageFlag(language) {
-  if (!language) return null;
+// export function getLanguageFlag(language) {
+//   if (!language) return null;
 
-  const langLower = language.toLowerCase();
-  const countryCode = LANGUAGE_TO_FLAG[langLower];
+//   const langLower = language.toLowerCase();
+//   // const countryCode = LANGUAGE_TO_FLAG[langLower];
 
-  if (countryCode) {
-    return (
-      <img
-        src={`https://flagcdn.com/24x18/${countryCode}.png`}
-        alt={`${langLower} flag`}
-        className="h-3 mr-1 inline-block"
-      />
-    );
-  }
-  return null;
-}
-
+//   if (countryCode) {
+//     return (
+//       <img
+//         src={`https://flagcdn.com/24x18/${countryCode}.png`}
+//         alt={`${langLower} flag`}
+//         className="h-3 mr-1 inline-block"
+//       />
+//     );
+//   }
+//   return null;
+// }
 const FriendCard = ({ friend }) => {
+  const { authUser } = useAuthStore();
+  console.log("authUser", authUser);
+  const chatLink = authUser._id + "&" + friend._id;
+
   return (
     <div className="card bg-base-200 hover:shadow-md transition-shadow">
       <div className="card-body p-4">
@@ -44,7 +48,7 @@ const FriendCard = ({ friend }) => {
           </span>
         </div>
 
-        <Link to={`/chat/${friend._id}`} className="btn btn-outline w-full">
+        <Link to={`/chat/${chatLink}`} className="btn btn-outline w-full">
           Message
         </Link>
       </div>

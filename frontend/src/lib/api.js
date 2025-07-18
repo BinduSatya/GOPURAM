@@ -26,6 +26,21 @@ export const getAuthUser = async () => {
   }
 };
 
+export const getRecipient = async (id) => {
+  try {
+    const res = await axiosInstance.get(`/users/get-user/${id}`);
+    console.log("frontend recieved", res.data);
+    if (res.data.success) {
+      return res.data.user;
+    } else {
+      return res.data.message;
+    }
+  } catch (error) {
+    console.log("Error in getAuthUser:", error);
+    return null;
+  }
+};
+
 export const completeOnboarding = async (userData) => {
   const response = await axiosInstance.post("/auth/onboarding", userData);
   return response.data;
@@ -96,10 +111,19 @@ export const postMemory = async (memoryData) => {
   return response.data.data;
 };
 
-export const getMessages = async (userId) => {
-  const response = await axiosInstance.get(`/chat/${userId}`);
+export const getMessages = async (id) => {
+  const response = await axiosInstance.get(`/chat/${id}`);
   if (response.data.success) {
     return response.data.messages;
+  } else {
+    return response.data.message;
+  }
+};
+
+export const postMessage = async (msgDetails) => {
+  const response = await axiosInstance.post(`/chat/send-message`, msgDetails);
+  if (response.data.success) {
+    return response.data.message;
   } else {
     return response.data.message;
   }
