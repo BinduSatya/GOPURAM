@@ -17,7 +17,9 @@ export const getMessages = async (req, res) => {
     const senderId = req.user._id;
     const receiverId = req.params.id;
     if (!senderId || !receiverId) {
-      return res.status(400).json({ message: "Sender or receiver not found" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Sender or receiver not found" });
     }
     const messages = await Message.find({
       $or: [
@@ -25,9 +27,13 @@ export const getMessages = async (req, res) => {
         { sender: receiverId, receiver: senderId },
       ],
     }).sort({ createdAt: 1 });
+    return res.status(200).json({ sucess: true, messages });
   } catch (error) {
     console.error("Error fetching messages:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error (While getting messages)",
+    });
   }
 };
 
@@ -37,7 +43,9 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user._id;
     const receiverId = req.params.id;
     if (!senderId || !receiverId) {
-      return res.status(400).json({ message: "Sender or receiver not found" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Sender or receiver not found" });
     }
     let imageUrl = "";
     if (image) {
@@ -54,7 +62,7 @@ export const sendMessage = async (req, res) => {
       });
       // real-time message sending logic here
     }
-    res.status(201).json({ success: true, message: newMessage });
+    return res.status(201).json({ success: true, message: newMessage });
   } catch (error) {
     console.error("Error uploading image:", error);
     return res.status(500).json({ message: "Image upload failed" });

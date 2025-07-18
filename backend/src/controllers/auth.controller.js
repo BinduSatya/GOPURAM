@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 export async function signup(req, res) {
   const { email, password, fullName } = req.body;
-  log("Signup request received:", { email, fullName, password });
+  console.log("Signup request received:", { email, fullName, password });
   try {
     if (!email || !password || !fullName) {
       return res.status(400).json({ message: "All fields are required" });
@@ -35,12 +35,10 @@ export async function signup(req, res) {
     let randomAvatar;
     randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png` || "helo";
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = await User.create({
       email,
       fullName,
-      password: hashedPassword,
+      password,
       profilePic: randomAvatar,
     });
 
@@ -65,8 +63,8 @@ export async function signup(req, res) {
 
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
+      // httpOnly: true, // prevent XSS attacks,
+      // sameSite: "strict", // prevent CSRF attacks
       secure: process.env.NODE_ENV === "production",
     });
 
@@ -77,7 +75,7 @@ export async function signup(req, res) {
     res.status(201).json({ success: true, user: newUser });
   } catch (error) {
     console.log("Error in signup controller", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
 
@@ -86,19 +84,23 @@ export async function login(req, res) {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
     const user = await User.findOne({ email });
     if (!user)
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password" });
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user.hashedPassword
-    );
+    const isPasswordCorrect = await user.matchPassword(password);
+
     if (!isPasswordCorrect)
-      res.status(401).json({ message: "Invalid email or password" });
+      res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password" });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "7d",
@@ -106,15 +108,15 @@ export async function login(req, res) {
 
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
+      // httpOnly: true, // prevent XSS attacks,
+      // sameSite: "strict", // prevent CSRF attacks
       secure: process.env.NODE_ENV === "production",
     });
     console.log("User logged in:", user);
     res.status(200).json({ success: true, user });
   } catch (error) {
     console.log("Error in login controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
 
@@ -151,27 +153,33 @@ export async function onboard(req, res) {
     );
 
     if (!updatedUser)
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
-    try {
-      await upsertStreamUser({
-        id: updatedUser._id.toString(),
-        name: updatedUser.fullName,
-        image: updatedUser.profilePic || "",
-      });
-      console.log(
-        `Stream user updated after onboarding for ${updatedUser.fullName}`
-      );
-    } catch (streamError) {
-      console.log(
-        "Error updating Stream user during onboarding:",
-        streamError.message
-      );
-    }
-
+    // try {
+    //   await upsertStreamUser({
+    //     id: updatedUser._id.toString(),
+    //     name: updatedUser.fullName,
+    //     image: updatedUser.profilePic || "",
+    //   });
+    //   console.log(
+    //     `Stream user updated after onboarding for ${updatedUser.fullName}`
+    //   );
+    // } catch (streamError) {
+    //   console.log(
+    //     "Error updating Stream user during onboarding:",
+    //     streamError.message
+    //   );
+    // }
     res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
     console.error("Onboarding error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Internal Server Error (While Onboarding)",
+      });
   }
 }

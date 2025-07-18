@@ -6,18 +6,19 @@ import {
   getMyFriends,
   getOutgoingFriendReqs,
   getRecommendedUsers,
+  getUserById,
   sendFriendRequest,
+  postMemory,
 } from "../controllers/user.controller.js";
-import TripMemory from "../models/TripMemory.model.js";
 
 const router = express.Router();
-// import { postMemory } from "../controllers/memory.controller.js";
-import { postMemory } from "../controllers/user.controller.js";
 
 router.use(protectRoute);
 
-router.get("/", getRecommendedUsers);
+router.get("/get-users", getRecommendedUsers);
+router.get("/get-user", getUserById);
 router.get("/friends", getMyFriends);
+
 router.post("/memories-form", postMemory);
 
 router.post("/friend-request/:id", sendFriendRequest);

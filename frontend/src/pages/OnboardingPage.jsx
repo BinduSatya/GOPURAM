@@ -15,7 +15,7 @@ import { LANGUAGES } from "../constants";
 
 const OnboardingPage = () => {
   const { authUser } = useAuthUser();
-  
+
   const queryClient = useQueryClient();
 
   const [formState, setFormState] = useState({
@@ -26,21 +26,23 @@ const OnboardingPage = () => {
     profilePic: authUser?.profilePic || "",
   });
 
-  const { mutate: onboardingMutation, isPending } = useMutation({
-    mutationFn: completeOnboarding,
-    onSuccess: () => {
-      toast.success("Profile onboarded successfully"); 
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-    },
+  // const { mutate: onboardingMutation, isPending } = useMutation({
+  //   mutationFn: completeOnboarding,
+  //   onSuccess: () => {
+  //     toast.success("Profile onboarded successfully");
+  //     queryClient.invalidateQueries({ queryKey: ["authUser"] });
+  //   },
 
-    onError: (error) => {
-      toast.error(error.response.data.message);
-    },
-  });
+  //   onError: (error) => {
+  //     toast.error(error.response.data.message);
+  //   },
+  // });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onboardingMutation(formState);
+    // onboardingMutation(formState);
+    let resp = await completeOnboarding(formState);
+    console.log("Onboarding response:", resp);
   };
 
   const handleRandomAvatar = () => {
