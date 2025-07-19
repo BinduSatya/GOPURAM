@@ -1,14 +1,30 @@
 import { axiosInstance } from "./axios";
+import { useAuthStore } from "../store/useAuthStore";
+// import { useAuthStore } from "../store/useAuthStore";
+
+const { checkAuth } = useAuthStore;
 
 export const signup = async (signupData) => {
+  // const { authUser } = useAuthStore;
   const response = await axiosInstance.post("/auth/signup", signupData);
-  console.log("response is", response);
-  return response.data;
+  if (response?.data.success) {
+    console.log("response is", response);
+    checkAuth();
+    console.log("after check auth");
+  }
+  return response?.data;
 };
 
 export const login = async (loginData) => {
   const response = await axiosInstance.post("/auth/login", loginData);
-  return response.data;
+  console.log("response?.data", response?.data?.user);
+  if (response?.data.success) {
+    console.log("before check auth");
+    checkAuth();
+    console.log("after check auth");
+    return response.data.user;
+  }
+  return response?.data?.message;
 };
 
 export const logout = async () => {
@@ -29,7 +45,6 @@ export const getAuthUser = async () => {
 export const getRecipient = async (id) => {
   try {
     const res = await axiosInstance.get(`/users/get-user/${id}`);
-    console.log("frontend recieved", res.data);
     if (res.data.success) {
       return res.data.user;
     } else {

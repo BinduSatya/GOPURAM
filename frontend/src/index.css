@@ -2,39 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  box-sizing: 0;
-  padding: 0;
-  margin: 0;
-}
-
-.str-chat__channel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(to bottom, #c9e8c9, #b7e7bb);
+/* Custom global fixes */
+html,
+body,
+#root {
   height: 100%;
 }
 
-.str-chat__container {
-  max-width: 1200px;
-  width: 100%;
-  height: 80% !important;
-  margin: 0 auto !important;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
 }
 
-.str-chat__list {
-  background-color: #ffffff;
-  padding: 12px;
-}
-
-.str-chat__list-notifications {
-  display: none;
-}
-
-.str-chat__message-input {
-  border-top: 1px solid #ddd;
+* {
+  @apply box-border;
 }

@@ -1,26 +1,14 @@
-// import { generateStreamToken } from "../lib/stream.js";
-
-// export async function getStreamToken(req, res) {
-//   try {
-//     const token = generateStreamToken(req.user.id);
-
-//     res.status(200).json({ token });
-//   } catch (error) {
-//     console.log("Error in getStreamToken controller:", error.message);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// }
 import cloudinary from "../lib/cloudinary.js";
 import Message from "../models/Message.model.js";
 
 export const getMessages = async (req, res) => {
   try {
     const chatId = req.params.id;
-    console.log("chatId", chatId);
+    console.log("getting chatId", chatId);
     const users = chatId.split("&");
     const senderId = users[0];
     const receiverId = users[1];
-    console.log("Id's of users are", senderId, receiverId);
+    console.log("getting Id's of users are", senderId, " ", receiverId);
 
     // return users;
     if (!senderId || !receiverId) {

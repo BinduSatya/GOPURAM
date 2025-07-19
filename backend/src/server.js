@@ -1,4 +1,6 @@
 import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -12,6 +14,27 @@ import chatRoutes from "./routes/chat.route.js";
 import { connectDB } from "./lib/db.js";
 
 const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`socket id is ${socket.id}`);
+  socket.on("send-message", (messageData) => {
+    console.log(`messge data is ${messageData}`);
+    io.emit("recieve-message", messageData);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`socket got disconnected ${socket.id}`);
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 const __dirname = path.resolve();
@@ -19,32 +42,16 @@ console.log(`__dirname: ${path.join(__dirname, "/public")}`);
 
 app.use(express.static(path.join(__dirname, "/public")));
 
-app.use(
-  cors({
-    // origin: "https://gopuram.vercel.app/ || http://localhost:5173",
-    origin: true, // Allow all origins for development
-    credentials: true, // allow frontend to send cookies
-  })
-);
+const allowedOrigins = ["http://localhost:5173", "https://gopuram.vercel.app"];
+
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "/public/index.html"));
-// });
-
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
-
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-//   });
-// }
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

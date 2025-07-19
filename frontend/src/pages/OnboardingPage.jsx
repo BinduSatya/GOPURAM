@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuthUser from "../hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useAuthStore } from "../store/useAuthStore";
+
 import { completeOnboarding } from "../lib/api";
 import {
   CameraIcon,
@@ -11,10 +11,9 @@ import {
   ShipWheelIcon,
   ShuffleIcon,
 } from "lucide-react";
-import { LANGUAGES } from "../constants";
 
 const OnboardingPage = () => {
-  const { authUser } = useAuthUser();
+  const { authUser, checkAuth } = useAuthUser();
 
   const queryClient = useQueryClient();
 
@@ -26,23 +25,24 @@ const OnboardingPage = () => {
     profilePic: authUser?.profilePic || "",
   });
 
-  // const { mutate: onboardingMutation, isPending } = useMutation({
-  //   mutationFn: completeOnboarding,
-  //   onSuccess: () => {
-  //     toast.success("Profile onboarded successfully");
-  //     queryClient.invalidateQueries({ queryKey: ["authUser"] });
-  //   },
+  const { mutate: onboardingMutation, isPending } = useMutation({
+    mutationFn: completeOnboarding,
+    onSuccess: () => {
+      toast.success("Profile onboarded successfully");
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
 
-  //   onError: (error) => {
-  //     toast.error(error.response.data.message);
-  //   },
-  // });
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // onboardingMutation(formState);
-    let resp = await completeOnboarding(formState);
-    console.log("Onboarding response:", resp);
+    onboardingMutation(formState);
+    checkAuth();
+    // let resp = await completeOnboarding(formState);
+    // console.log("Onboarding response:", resp);
   };
 
   const handleRandomAvatar = () => {

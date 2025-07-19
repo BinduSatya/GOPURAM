@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
-import useLogin from "../hooks/useLogin";
+import { login } from "../lib/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import useLogin from "../hooks/useLogin";
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
@@ -10,21 +12,21 @@ const LoginPage = () => {
   });
 
   // This is how we did it at first, without using our custom hook
-  // const queryClient = useQueryClient();
-  // const {
-  //   mutate: loginMutation,
-  //   isPending,
-  //   error,
-  // } = useMutation({
-  //   mutationFn: login,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  // });
+  const queryClient = useQueryClient();
+  const { mutate: loginMutation, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+    onError: () => {
+      console.log("error occured");
+    },
+  });
 
   // This is how we did it using our custom hook - optimized version
-  const { isPending, error, loginMutation } = useLogin();
+  // const { isPending, error, loginMutation } = useLogin();
 
   const handleLogin = (e) => {
     e.preventDefault();
+    // login(loginData);
     loginMutation(loginData);
   };
 
@@ -43,17 +45,19 @@ const LoginPage = () => {
           </div>
 
           {/* ERROR MESSAGE DISPLAY */}
-          {error && (
+          {/* {error && (
             <div className="alert alert-error mb-4">
               <span>{error.response.data.message}</span>
             </div>
-          )}
+          )} */}
 
           <div className="w-full">
             <form onSubmit={handleLogin}>
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-xl font-semibold">Gopuram Member Login</h2>
+                  <h2 className="text-xl font-semibold">
+                    Gopuram Member Login
+                  </h2>
                   <p className="text-sm opacity-70">
                     Sign in to your account to continue
                   </p>
@@ -69,7 +73,9 @@ const LoginPage = () => {
                       placeholder="gopu@ram.com"
                       className="input input-bordered w-full"
                       value={loginData.email}
-                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                      onChange={(e) =>
+                        setLoginData({ ...loginData, email: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -83,12 +89,18 @@ const LoginPage = () => {
                       placeholder="••••••••"
                       className="input input-bordered w-full"
                       value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      onChange={(e) =>
+                        setLoginData({ ...loginData, password: e.target.value })
+                      }
                       required
                     />
                   </div>
 
-                  <button type="submit" className="btn btn-primary w-full" disabled={isPending}>
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-full"
+                    disabled={isPending}
+                  >
                     {isPending ? (
                       <>
                         <span className="loading loading-spinner loading-xs"></span>
@@ -102,7 +114,10 @@ const LoginPage = () => {
                   <div className="text-center mt-4">
                     <p className="text-sm">
                       Want to join in Gopuram?{" "}
-                      <Link to="/signup" className="text-primary hover:underline">
+                      <Link
+                        to="/signup"
+                        className="text-primary hover:underline"
+                      >
                         Create account
                       </Link>
                     </p>
@@ -118,11 +133,17 @@ const LoginPage = () => {
           <div className="max-w-md p-8">
             {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
-              <img src="../../public/i.png" alt="Gopuram Joining Image" className="w-full h-full" />
+              <img
+                src="../../public/i.png"
+                alt="Gopuram Joining Image"
+                className="w-full h-full"
+              />
             </div>
 
             <div className="text-center space-y-3 mt-6">
-              <h2 className="text-xl font-semibold">Connect with language partners worldwide</h2>
+              <h2 className="text-xl font-semibold">
+                Connect with language partners worldwide
+              </h2>
               <p className="opacity-70">
                 Have Converstaions, make friends, and improve skills together.
               </p>

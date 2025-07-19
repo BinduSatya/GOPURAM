@@ -11,7 +11,6 @@ import OnboardingPage from "./pages/OnboardingPage.jsx";
 import { Toaster } from "react-hot-toast";
 
 import PageLoader from "./components/PageLoader.jsx";
-// import useAuthUser from "./hooks/useAuthUser.js";
 
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
@@ -118,7 +117,9 @@ const App = () => {
         <Route
           path="/memories"
           element={
-            isAuthenticated && isOnboarded ? (
+            isLoading || isCheckingAuth ? (
+              <PageLoader />
+            ) : isAuthenticated && isOnboarded ? (
               <Layout showSidebar={true}>
                 <MemoriesPage />
               </Layout>
@@ -151,12 +152,13 @@ const App = () => {
         />
 
         <Route
-          path="/chat/:id"
+          path="/message/:id"
           element={
             isLoading || isCheckingAuth ? (
               <PageLoader />
             ) : isAuthenticated && isOnboarded ? (
               <Layout showSidebar={true}>
+                {/* <HelloPage /> */}
                 <ChatPage />
               </Layout>
             ) : (

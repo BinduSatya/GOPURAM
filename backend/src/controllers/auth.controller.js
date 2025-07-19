@@ -128,7 +128,6 @@ export function logout(req, res) {
 export async function onboard(req, res) {
   try {
     const userId = req.user._id;
-
     const { fullName, bio, learningSkill, location } = req.body;
 
     if (!fullName || !bio || !learningSkill || !location) {

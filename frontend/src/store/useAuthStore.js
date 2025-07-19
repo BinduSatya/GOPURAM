@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 
 export const useAuthStore = create((set) => ({
-  // variables
   authUser: null,
   isAuthenticated: false,
   isSignedIn: false,
@@ -10,23 +9,21 @@ export const useAuthStore = create((set) => ({
   isLoading: true,
   isUpdatingProfile: false,
   isCheckingAuth: true,
-  // methods
   checkAuth: async () => {
     set({ isCheckingAuth: true, isLoading: true });
-
     try {
       const res = await axiosInstance.get("/auth/me");
-      console.log("res from frontend", res.data.user);
-      if (res.data.user) {
+      if (res.data.success) {
         set({
           authUser: res.data.user,
           isSignedIn: true,
           isAuthenticated: true,
           isCheckingAuth: false,
           isLoading: false,
-          isOnboarded: res.data.user.isOnboarded,
+          isOnboarded: res?.data?.user?.isOnboarded,
         });
       } else {
+        console.log(res.data.message);
         set({
           isSignedIn: false,
           isOnBoarded: false,
