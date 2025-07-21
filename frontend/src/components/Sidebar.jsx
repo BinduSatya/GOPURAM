@@ -4,96 +4,100 @@ import {
   BellIcon,
   FerrisWheel,
   HomeIcon,
+  LogOutIcon,
   ShipWheelIcon,
   UsersIcon,
   Video,
 } from "lucide-react";
+import useLogout from "../hooks/useLogout";
+import ThemeSelector from "./ThemeSelector";
 
-const Sidebar = () => {
+const Sidebar = ({ isCompact = false }) => {
+  const { logoutMutation } = useLogout();
   const { authUser } = useAuthUser();
-  // const authUser = null;
   const location = useLocation();
   const currentPath = location.pathname;
 
+  const navItems = [
+    { to: "/", label: "Home", icon: <HomeIcon className="size-5" /> },
+    {
+      to: "/friends",
+      label: "Friends",
+      icon: <UsersIcon className="size-5" />,
+    },
+    {
+      to: "/notifications",
+      label: "Notifications",
+      icon: <BellIcon className="size-5" />,
+    },
+    {
+      to: "/memories",
+      label: "Memories",
+      icon: <FerrisWheel className="size-5" />,
+    },
+    {
+      to: "/video-calls",
+      label: "Make a Call",
+      icon: <Video className="size-5" />,
+    },
+  ];
+
   return (
-    <aside className="w-64 bg-base-200 border-r border-base-300 hidden lg:flex flex-col h-screen sticky top-0">
-      <div className="p-5 border-b border-base-300">
-        <Link to="/" className="flex items-center gap-2.5">
-          <ShipWheelIcon className="size-9 text-primary" />
-          <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary  tracking-wider">
+    <aside className="w-64 bg-base-200 border-r border-base-300 hidden md:flex flex-col h-screen sticky top-0">
+      {/* Logo */}
+      <div className="p-5 border-b border-base-300 select-none flex items-center gap-2">
+        <ShipWheelIcon className="size-9 text-primary" />
+        {!isCompact && (
+          <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
             GOPURAM
           </span>
-        </Link>
+        )}
       </div>
 
       <nav className="flex-1 p-4 space-y-1">
-        <Link
-          to="/"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/" ? "btn-active" : ""
-          }`}
-        >
-          <HomeIcon className="size-5 text-base-content opacity-70" />
-          <span>Home</span>
-        </Link>
-
-        <Link
-          to="/friends"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/friends" ? "btn-active" : ""
-          }`}
-        >
-          <UsersIcon className="size-5 text-base-content opacity-70" />
-          <span>Friends</span>
-        </Link>
-
-        <Link
-          to="/notifications"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/notifications" ? "btn-active" : ""
-          }`}
-        >
-          <BellIcon className="size-5 text-base-content opacity-70" />
-          <span>Notifications</span>
-        </Link>
-        <Link
-          to="/memories"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/memories" ? "btn-active" : ""
-          }`}
-        >
-          <FerrisWheel className="size-5 text-base-content opacity-70" />
-          <span>Memories</span>
-        </Link>
-        <Link
-          to="/video-calls"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/video-calls" ? "btn-active" : ""
-          }`}
-        >
-          <Video className="size-5 text-base-content opacity-70" />
-          <span>Make a Call</span>
-        </Link>
+        {navItems.map(({ to, label, icon }) => (
+          <Link
+            key={to}
+            to={to}
+            className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
+              currentPath === to ? "btn-active" : ""
+            }`}
+          >
+            {icon}
+            {!isCompact && <span>{label}</span>}
+          </Link>
+        ))}
       </nav>
 
-      {/* USER PROFILE SECTION */}
       <div className="p-4 border-t border-base-300 mt-auto">
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="w-10 rounded-full">
-              <img src={authUser?.profilePic || `../../public/i.png`} alt="User Avatar" />
+              <img
+                src={authUser?.profilePic || `../../public/i.png`}
+                alt="User Avatar"
+              />
             </div>
           </div>
-          <div className="flex-1">
-            <p className="font-semibold text-sm">{authUser?.fullName}</p>
-            <p className="text-xs text-success flex items-center gap-1">
-              <span className="size-2 rounded-full bg-success inline-block" />
-              Online
-            </p>
-          </div>
+          {!isCompact && (
+            <>
+              <div className="flex-1">
+                <p className="font-semibold text-sm">{authUser?.fullName}</p>
+                <p className="text-xs text-success flex items-center gap-1">
+                  <span className="size-2 rounded-full bg-success inline-block" />
+                  Online
+                </p>
+              </div>
+              <ThemeSelector />
+            </>
+          )}
+          <button className="btn btn-ghost btn-circle" onClick={logoutMutation}>
+            <LogOutIcon className="h-6 w-6 text-base-content opacity-70" />
+          </button>
         </div>
       </div>
     </aside>
   );
 };
+
 export default Sidebar;

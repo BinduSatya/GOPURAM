@@ -35,6 +35,7 @@ export const getMessages = async (req, res) => {
 export const sendMessage = async (req, res) => {
   try {
     const { senderId, receiverId, messageText, imageFile } = req.body;
+
     console.log("came to backend", req.body);
 
     if (!senderId || !receiverId) {
@@ -43,10 +44,15 @@ export const sendMessage = async (req, res) => {
         .json({ success: false, message: "Sender or receiver not found" });
     }
     let imageUrl = "";
-    if (imageFile) {
-      const uploadResponse = await cloudinary.uploader.upload(imageFile, {
-        folder: "gopuram",
-      });
+    if (req.file) {
+      const uploadResponse = await cloudinary.uploader.upload(
+        `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+          "base64"
+        )}`,
+        {
+          folder: "gopuram",
+        }
+      );
       imageUrl = uploadResponse.secure_url;
       console.log("Image uploaded successfully:", imageUrl);
     }
@@ -56,9 +62,6 @@ export const sendMessage = async (req, res) => {
       text: messageText,
       image: imageUrl,
     });
-
-    // real-time message sending logic here
-
     return res.status(201).json({ success: true, message: newMessage });
   } catch (error) {
     console.error("Error uploading image:", error);

@@ -6,7 +6,7 @@ const ThemeSelector = () => {
   const { theme, setTheme } = useThemeStore();
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-top">
       {/* DROPDOWN TRIGGER */}
       <button tabIndex={0} className="btn btn-ghost btn-circle">
         <PaletteIcon className="size-5" />
@@ -14,7 +14,7 @@ const ThemeSelector = () => {
 
       <div
         tabIndex={0}
-        className="dropdown-content mt-2 p-1 shadow-2xl bg-base-200 backdrop-blur-lg rounded-2xl
+        className="dropdown-content mt-2 p-1 shadow-2xl bg-base-200  rounded-2xl z-50
         w-56 border border-base-content/10 max-h-80 overflow-y-auto"
       >
         <div className="space-y-1">

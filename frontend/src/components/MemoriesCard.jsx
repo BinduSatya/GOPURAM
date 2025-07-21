@@ -11,9 +11,9 @@ const MemoriesCard = ({ memory }) => {
       to={memory.link}
       target="_blank"
       rel="noopener noreferrer"
-      className="cursor-pointer text-base-100 text-xs break-all"
+      className="cursor-pointer text-base-100 text-xs break-all select-none"
     >
-      <div className="card card-border transition cursor-pointer bg-base-100 image-full w-auto shadow-sm hover:shadow-md hover:scale-105 hover:shadow-lg">
+      <div className="transition cursor-pointer bg-base-100  image-full w-auto shadow-sm hover:scale-105 hover:shadow-lg hover:opacity-100 active:scale-95 card card-border">
         <figure>
           <img
             src={
