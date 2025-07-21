@@ -1,7 +1,4 @@
-import { log } from "console";
-import { upsertStreamUser } from "../lib/stream.js";
 import User from "../models/User.model.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export async function signup(req, res) {
@@ -32,8 +29,9 @@ export async function signup(req, res) {
     }
 
     const idx = Math.floor(Math.random() * 100) + 1; // generate a num between 1-100
-    let randomAvatar;
-    randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png` || "helo";
+    let randomAvatar =
+      `https://avatar.iran.liara.run/public/${idx}.png ` ||
+      `https://avatar.iran.liara.run/public/21`;
 
     const newUser = await User.create({
       email,
@@ -174,11 +172,9 @@ export async function onboard(req, res) {
     res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
     console.error("Onboarding error:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Internal Server Error (While Onboarding)",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error (While Onboarding)",
+    });
   }
 }

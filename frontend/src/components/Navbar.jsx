@@ -40,7 +40,7 @@ const Navbar = () => {
           <div className="avatar">
             <div className="w-9 rounded-full">
               <img
-                src={authUser?.profilePic}
+                src={authUser?.profilePic || `../../public/i.png`}
                 alt="User Avatar"
                 rel="noreferrer"
               />

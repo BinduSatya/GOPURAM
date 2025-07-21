@@ -20,6 +20,7 @@ import MemoriesPage from "./pages/MemoriesPage.jsx";
 import VideoCallPage from "./pages/VideoCallPage.jsx";
 import { useEffect } from "react";
 
+
 const App = () => {
   const { theme } = useThemeStore();
   const {
@@ -30,6 +31,8 @@ const App = () => {
     authUser,
     checkAuth,
   } = useAuthStore();
+
+  
 
   useEffect(() => {
     checkAuth();

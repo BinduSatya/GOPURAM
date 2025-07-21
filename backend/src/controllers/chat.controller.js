@@ -56,7 +56,9 @@ export const sendMessage = async (req, res) => {
       text: messageText,
       image: imageUrl,
     });
+
     // real-time message sending logic here
+
     return res.status(201).json({ success: true, message: newMessage });
   } catch (error) {
     console.error("Error uploading image:", error);

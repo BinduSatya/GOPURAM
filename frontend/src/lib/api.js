@@ -1,8 +1,13 @@
 import { axiosInstance } from "./axios";
 import { useAuthStore } from "../store/useAuthStore";
+// import { io } from "socket.io-client";
 // import { useAuthStore } from "../store/useAuthStore";
+// import { useSocketStore } from "../store/useSocketStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 const { checkAuth } = useAuthStore;
+// const { socket } = useSocketStore;
+// const socket = io("http://localhost:3000", { withCredentials: true });
 
 export const signup = async (signupData) => {
   // const { authUser } = useAuthStore;
@@ -128,6 +133,7 @@ export const postMemory = async (memoryData) => {
 
 export const getMessages = async (id) => {
   const response = await axiosInstance.get(`/chat/${id}`);
+
   if (response.data.success) {
     return response.data.messages;
   } else {
@@ -135,8 +141,9 @@ export const getMessages = async (id) => {
   }
 };
 
-export const postMessage = async (msgDetails) => {
+export const postMessage = async (msgDetails, socket) => {
   const response = await axiosInstance.post(`/chat/send-message`, msgDetails);
+  socket.emit("send-message", msgDetails);
   if (response.data.success) {
     return response.data.message;
   } else {

@@ -12,6 +12,7 @@ const ChatPage = () => {
   const users = chatId.split("&");
   const receiverId = users[1];
 
+  
   const {
     data: recipient,
     isLoading: loadingRecipient,

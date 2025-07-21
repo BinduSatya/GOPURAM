@@ -5,7 +5,6 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
-import TripMemory from "./models/TripMemory.model.js";
 
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
@@ -24,16 +23,21 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`socket id is ${socket.id}`);
-  socket.on("send-message", (messageData) => {
-    console.log(`messge data is ${messageData}`);
-    io.emit("recieve-message", messageData);
+  console.log("New User Connected", socket.id);
+  io.emit("welcome", `New User Connected, ${socket.id}`);
+  socket.on("send-message", (msgDetails) => {
+    console.log(
+      `messge data is ${msgDetails.senderId}, ${msgDetails.messageText}`
+    );
+    socket.broadcast.emit("recieved-message");
   });
 
   socket.on("disconnect", () => {
     console.log(`socket got disconnected ${socket.id}`);
   });
 });
+
+app.set("io", io);
 
 const PORT = process.env.PORT || 3000;
 
@@ -53,7 +57,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });

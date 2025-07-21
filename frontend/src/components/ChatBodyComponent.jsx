@@ -1,20 +1,26 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { getMessages } from "../lib/api";
+import { useSocketStore } from "../store/useSocketStore";
 
 const ChatComponent = ({ id }) => {
+  const queryClient = useQueryClient();
   const chatId = id;
   const users = chatId.split("&");
   const senderId = users[0];
   const messagesEndRef = useRef(null);
-
+  const socket = useSocketStore((state) => state.socket);
   const {
     data: messages = [],
     isLoading: loadingMessages,
     error: messagesError,
   } = useQuery({
     queryKey: ["chat-messages", id],
-    queryFn: () => getMessages(id),
+    queryFn: () => getMessages(id, socket),
+  });
+
+  socket.on("recieved-message", () => {
+    queryClient.invalidateQueries({ queryKey: ["chat-messages", id] });
   });
 
   useEffect(() => {
