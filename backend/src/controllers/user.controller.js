@@ -1,6 +1,5 @@
 import User from "../models/User.model.js";
 import FriendRequest from "../models/FriendRequest.model.js";
-import TripMemory from "../models/TripMemory.model.js";
 
 export async function getRecommendedUsers(req, res) {
   try {
@@ -167,8 +166,10 @@ export async function getFriendRequests(req, res) {
       sender: req.user._id,
       status: "accepted",
     }).populate("recipient", "fullName profilePic learningSkill location");
+    console.log("incomingReqs", incomingReqs);
+    console.log("acceptedReqs", acceptedReqs);
 
-    res.status(200).json({ success: true, incomingReqs, acceptedReqs });
+    res.status(200).json({ success: true, message: incomingReqs });
   } catch (error) {
     console.log("Error in getPendingFriendRequests controller", error.message);
     res.status(500).json({
@@ -188,32 +189,5 @@ export async function getOutgoingFriendReqs(req, res) {
   } catch (error) {
     console.log("Error in getOutgoingFriendReqs controller", error.message);
     res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-}
-
-export async function postMemory(req, res) {
-  try {
-    console.log("Memory endpoint hit", req.body);
-    const { tripName, ownerName, date, link, image } = req.body;
-    if (!tripName || !ownerName || !date || !link) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Data not filled" });
-    }
-    const newMemory = await TripMemory.create({
-      tripName,
-      ownerName,
-      date,
-      link,
-      image,
-    });
-    return res.status(201).json({
-      success: true,
-      data: newMemory,
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Memory not created" });
   }
 }

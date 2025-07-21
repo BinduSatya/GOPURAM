@@ -1,10 +1,13 @@
-import React from "react";
-
-const ChatHeader = ({ fullName: name }) => {
+const ChatHeader = ({ reciever }) => {
   return (
     <div>
-      <header className="py-2 px-3 bg-primary text-white text-lg font-bold">
-        Chatting with {name}
+      <header className="py-2 px-3 bg-base-300 opacity-90 text-lg font-bold flex gap-4 items-center ">
+        <img
+          className={`w-10 h-10`}
+          src={`${reciever.profilePic || "../../public/user.png"}`}
+          alt=""
+        />
+        Chatting with {reciever.fullName}
       </header>
     </div>
   );

@@ -12,7 +12,6 @@ const ChatPage = () => {
   const users = chatId.split("&");
   const receiverId = users[1];
 
-  
   const {
     data: recipient,
     isLoading: loadingRecipient,
@@ -31,14 +30,14 @@ const ChatPage = () => {
       ) : recipientError ? (
         <>Error occured, contact BSAmarnadh</>
       ) : (
-        <div className="flex flex-col h-full bg-base-300">
-          <ChatHeader fullName={recipient.fullName} />
+        <div className="flex flex-col h-full">
+          <ChatHeader reciever={recipient} />
 
-          <div className="flex-1 overflow-y-auto px-2 py-3">
-            <ChatBodyComponent id={chatId} />
+          <div className="flex-1 overflow-y-auto px-2 py-3 bg-base-100">
+            <ChatBodyComponent id={chatId} reciver={recipient} />
           </div>
 
-          <div className="border-t bg-white">
+          <div className="border-red">
             <ChatInput id={chatId} />
           </div>
         </div>

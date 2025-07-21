@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
+  getFriendRequests,
   getOutgoingFriendReqs,
   getRecommendedUsers,
   getUserFriends,
@@ -33,10 +34,42 @@ const HomePage = () => {
     queryFn: getRecommendedUsers,
   });
 
-  const { data: outgoingFriendReqs } = useQuery({
-    queryKey: ["outgoingFriendReqs"],
-    queryFn: getOutgoingFriendReqs,
+  const { data: outgoingFriendReqs, isLoading: loadingOutgoingFriends } =
+    useQuery({
+      queryKey: ["outgoingFriendReqs"],
+      queryFn: getOutgoingFriendReqs,
+    });
+
+  const {
+    data: incomingFriendReqs,
+    isLoading: loadingFriendRequests,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["incomingFriendReqs"],
+    queryFn: getFriendRequests,
+    onError: () => {
+      console.log("error in fetching reqs");
+    },
   });
+
+  // if (isSuccess) {
+  //   console.log(
+  //     "incomingFriendReqs",
+  //     incomingFriendReqs.incomingReqs,
+  //     "acepted are",
+  //     incomingFriendReqs.acceptedReqs
+  //   );
+  // }
+  // useEffect(() => {
+  //   if (!loadingFriendRequests && isSuccess && incomingFriendReqs) {
+  //     console.log(
+  //       "incomingFriendReqs",
+  //       incomingFriendReqs.incomingReqs,
+  //       "acepted are",
+  //       incomingFriendReqs.acceptedReqs
+  //     );
+  //   }
+  // }, [isSuccess, incomingFriendReqs]);
 
   const { mutate: sendRequestMutation, isPending } = useMutation({
     mutationFn: sendFriendRequest,
@@ -67,7 +100,10 @@ const HomePage = () => {
           </Link>
         </div>
 
-        {loadingFriends ? (
+        {loadingFriends ||
+        loadingOutgoingFriends ||
+        loadingFriendRequests ||
+        loadingUsers ? (
           <div className="flex justify-center py-12">
             <span className="loading loading-spinner loading-lg" />
           </div>

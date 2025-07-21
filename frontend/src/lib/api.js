@@ -106,10 +106,8 @@ export async function sendFriendRequest(userId) {
 export async function getFriendRequests() {
   const response = await axiosInstance.get("/users/friend-requests");
   if (response.data.success) {
-    return response.data.incomingReqs, response.data.acceptedReqs;
-  } else {
     return response.data.message;
-  }
+  } else return null;
 }
 
 export async function acceptFriendRequest(requestId) {
@@ -126,9 +124,18 @@ export async function acceptFriendRequest(requestId) {
 // /users/friend-requests
 // /users/memories-form
 
+export const getAllMemories = async () => {
+  const response = await axiosInstance.get("/memories/all");
+  console.log("response from memroes", response.data.message);
+  return response.data.message;
+};
+
 export const postMemory = async (memoryData) => {
-  const response = await axiosInstance.post("/users/memories-form", memoryData);
-  return response.data.data;
+  const response = await axiosInstance.post(
+    "/memories/post-memory",
+    memoryData
+  );
+  return response;
 };
 
 export const getMessages = async (id) => {

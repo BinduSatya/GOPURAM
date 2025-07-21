@@ -18,7 +18,7 @@ const ChatInput = ({ id }) => {
   const [imageFile, setImageFile] = useState(null);
 
   const { mutate: sendMsg, isLoading: sending } = useMutation({
-    mutationFn: (newMsg) => postMessage(newMsg,socket),
+    mutationFn: (newMsg) => postMessage(newMsg, socket),
     onSuccess: () => {
       setMessageText("");
       setImageFile(null);
@@ -41,7 +41,7 @@ const ChatInput = ({ id }) => {
     <div>
       <form
         onSubmit={handleSend}
-        className="p-4 bg-primary  bg-neutral flex gap-4 sticky bottom-0"
+        className="p-4 flex gap-4 sticky bottom-0"
         autoComplete="off"
         encType="multipart/form-data"
       >
@@ -52,12 +52,12 @@ const ChatInput = ({ id }) => {
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
           placeholder="Type your message..."
-          className="flex-1 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-info bg-neutral"
+          className="flex-1 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent bg-base-100 border border-neutral-300 text-base-content"
           disabled={sending}
         />
         <button
           type="submit"
-          className="bg-accent hover:bg-secondary text-white px-4 py-2 rounded-lg shadow transition disabled:bg-neutral-500 focus:ring-2 focus:ring-base-200 cursor-pointer"
+          className="bg-accent hover:bg-secondary text-white px-4 py-2 rounded-full shadow transition transform active:scale-95 disabled:bg-neutral-500 cursor-pointer"
           disabled={sending || (!messageText.trim() && !imageFile)}
         >
           <SendHorizonal />

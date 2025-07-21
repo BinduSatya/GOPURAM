@@ -1,25 +1,39 @@
 import { Link } from "react-router";
 import tripImg from "../../public/i.png";
+import { getCleanDay } from "../lib/utils";
 
-const MemoriesCard = () => {
+const MemoriesCard = ({ memory }) => {
+  console.log("memorycard", memory);
+  const day = getCleanDay(memory?.date);
+
   return (
-    <div className="flex justify-between rounded-lg items-start bg-primary px-3 py-2">
-      <div className="flex flex-col items-center md:items-start">
-        <span className="text-2xl text-neutral font-medium">Trip Name</span>
-        <span className="font-medium text-base-100">Owner Name</span>
-        <div className="text-s text-base-100">Date</div>
-        <Link to="#" className="cursor-pointer text-base-100 text-xs">
-          Link
-        </Link>
+    <Link
+      to={memory.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="cursor-pointer text-base-100 text-xs break-all"
+    >
+      <div className="card card-border transition cursor-pointer bg-base-100 image-full w-auto shadow-sm hover:shadow-md hover:scale-105 hover:shadow-lg">
+        <figure>
+          <img
+            src={
+              memory.image === null ||
+              memory.image === "" ||
+              memory.image === "image place holder text"
+                ? tripImg
+                : memory.image
+            }
+          />
+        </figure>
+        <div className="card-body">
+          <h2 className="card-title">{memory.tripName || "Card Title"}</h2>
+          <div className="flex flex-col justify-center">
+            <p>{memory.ownerName || "Card Title"}</p>
+            <p>{day === undefined ? "dd:mm::yy" : day}</p>
+          </div>
+        </div>
       </div>
-      <div className="">
-        <img
-          className="size-24 object-top-left shadow-xl mr-3 rounded-md"
-          alt=""
-          src={tripImg}
-        />
-      </div>
-    </div>
+    </Link>
   );
 };
 

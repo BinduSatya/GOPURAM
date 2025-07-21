@@ -1,18 +1,33 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { postMemory } from "../lib/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const MemoryForm = ({ onClose }) => {
+  const queryClient = useQueryClient();
+
   const [form, setForm] = useState({
     tripName: "",
     ownerName: "",
     date: "",
     link: "",
-    image: null,
+    image: "image place holder text",
   });
   const [show, setShow] = useState(false);
 
+  const { mutate } = useMutation({
+    mutationFn: postMemory,
+    onSuccess: () => {
+      toast.success("Successfully, uploaded"),
+        queryClient.invalidateQueries(["all-memories"]);
+    },
+    onLoading: () => {
+      toast("Loading, please wait");
+    },
+  });
+
   useEffect(() => {
-    setTimeout(() => setShow(true), 10); // trigger animation after mount
+    setShow(true);
     const handleEsc = (e) => {
       if (e.key === "Escape") {
         if (onClose) onClose();
@@ -33,8 +48,9 @@ const MemoryForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const res = await postMemory(form);
-      console.log("Memory submitted successfully", res.data);
+      const res = mutate(form);
+
+      console.log("Memory submitted successfully", res);
     } catch (e) {
       console.log("error while submitting", e);
     }
@@ -43,7 +59,7 @@ const MemoryForm = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center transition-opacity justify-center bg-black bg-opacity-60"
+      className="fixed card inset-0 z-50 flex items-center transition-opacity justify-center bg-black bg-opacity-60"
       onClick={() => onClose && onClose()}
     >
       <div
@@ -52,7 +68,7 @@ const MemoryForm = ({ onClose }) => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <form onSubmit={handleSubmit} className="flex card-body flex-col gap-2">
           <label className="flex flex-col">
             Trip Name
             <input
@@ -99,10 +115,18 @@ const MemoryForm = ({ onClose }) => {
           </label>
           <label className="flex flex-col">
             Trip Image
-            <input
+            {/* <input
               type="file"
               name="image"
               accept="image/*"
+              onChange={handleChange}
+              className="border rounded p-2 bg-base-200"
+              //   required
+            /> */}
+            <input
+              type="text"
+              name="ownerName"
+              value={form.ownerName}
               onChange={handleChange}
               className="border rounded p-2 bg-base-200"
               //   required
@@ -111,13 +135,13 @@ const MemoryForm = ({ onClose }) => {
           <div className="flex w-full gap-2">
             <button
               type="submit"
-              className="bg-accent text-white w-1/2 rounded p-2 hover:bg-primary"
+              className="btn btn-accent  w-1/2 p-2 hover:bg-primary"
             >
               Submit
             </button>
             <button
               type="button"
-              className="text-xl bg-secondary w-1/2 rounded p-2 hover:bg-red-600"
+              className="btn btn-secondary w-1/2 p-2 hover:bg-warning"
               onClick={onClose}
             >
               Close
