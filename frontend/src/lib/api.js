@@ -3,7 +3,6 @@ import { useAuthStore } from "../store/useAuthStore";
 // import { io } from "socket.io-client";
 // import { useAuthStore } from "../store/useAuthStore";
 // import { useSocketStore } from "../store/useSocketStore";
-import { useQueryClient } from "@tanstack/react-query";
 
 const { checkAuth } = useAuthStore;
 // const { socket } = useSocketStore;
@@ -114,6 +113,7 @@ export async function acceptFriendRequest(requestId) {
   const response = await axiosInstance.put(
     `/users/friend-request/${requestId}/accept`
   );
+  console.log("accepted", response.data);
   return response.data.message;
 }
 

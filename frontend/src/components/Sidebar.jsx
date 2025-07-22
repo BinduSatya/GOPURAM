@@ -51,12 +51,14 @@ const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
       `}
     >
       <div className="p-5 border-b border-base-300 select-none flex items-center gap-2">
-        <ShipWheelIcon className="size-9 text-primary" />
-        {!isCompact && (
-          <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
-            GOPURAM
-          </span>
-        )}
+        <Link to="/" onClick={mobile ? onClose : undefined}>
+          <ShipWheelIcon className="size-9 text-primary" />
+          {!isCompact && (
+            <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
+              GOPURAM
+            </span>
+          )}
+        </Link>
       </div>
 
       <nav className="flex-1 p-4 space-y-1">
