@@ -2,39 +2,42 @@ import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
-const Layout = ({ children, showSidebar = false }) => {
+const Layout = ({ children, showSidebar = true }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isCompact, setIsCompact] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 640); // <640px = mobile (sm in Tailwind)
+      const width = window.innerWidth;
+      setIsMobile(width < 640);
+      setIsCompact(width < 760);
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <div className="min-h-screen flex">
-      {/* Sidebar is shown based on screen size */}
-      {showSidebar && !isMobile && (
-        <Sidebar compact={window.innerWidth < 1024} /> 
-        // <1024px = show only icons, else full sidebar
-      )}
-
+      {showSidebar && !isMobile && <Sidebar isCompact={isCompact} />}
       <div className="flex-1 flex flex-col h-screen">
-        {/* Navbar with hamburger menu for mobile */}
         {isMobile && (
-          <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Navbar
+            isMobile={isMobile}
+            setSidebarOpen={setSidebarOpen}
+            sidebarOpen={sidebarOpen}
+          />
         )}
 
-        {/* Mobile Sidebar Drawer */}
         {isMobile && sidebarOpen && (
           <div className="fixed inset-0 z-40 flex">
-            <Sidebar mobile onClose={() => setSidebarOpen(false)} />
+            <Sidebar
+              isCompact={true}
+              mobile
+              onClose={() => setSidebarOpen(false)}
+            />
             <div
               className="fixed inset-0 bg-black opacity-50"
               onClick={() => setSidebarOpen(false)}

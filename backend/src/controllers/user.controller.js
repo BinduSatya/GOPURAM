@@ -169,7 +169,9 @@ export async function getFriendRequests(req, res) {
     console.log("incomingReqs", incomingReqs);
     console.log("acceptedReqs", acceptedReqs);
 
-    res.status(200).json({ success: true, message: incomingReqs });
+    res
+      .status(200)
+      .json({ success: true, message: { incomingReqs, acceptedReqs } });
   } catch (error) {
     console.log("Error in getPendingFriendRequests controller", error.message);
     res.status(500).json({

@@ -20,7 +20,6 @@ import MemoriesPage from "./pages/MemoriesPage.jsx";
 import VideoCallPage from "./pages/VideoCallPage.jsx";
 import { useEffect } from "react";
 
-
 const App = () => {
   const { theme } = useThemeStore();
   const {
@@ -31,8 +30,6 @@ const App = () => {
     authUser,
     checkAuth,
   } = useAuthStore();
-
-  
 
   useEffect(() => {
     checkAuth();
@@ -65,7 +62,7 @@ const App = () => {
           path="/"
           element={
             isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={true}>
+              <Layout>
                 <HomePage />
               </Layout>
             ) : (
@@ -97,7 +94,7 @@ const App = () => {
           path="/notifications"
           element={
             isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={true}>
+              <Layout>
                 <NotificationsPage />
               </Layout>
             ) : (
@@ -109,7 +106,7 @@ const App = () => {
           path="/friends"
           element={
             isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={true}>
+              <Layout>
                 <FriendsPage />
               </Layout>
             ) : (
@@ -123,7 +120,7 @@ const App = () => {
             isLoading || isCheckingAuth ? (
               <PageLoader />
             ) : isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={true}>
+              <Layout>
                 <MemoriesPage />
               </Layout>
             ) : (
@@ -160,7 +157,7 @@ const App = () => {
             isLoading || isCheckingAuth ? (
               <PageLoader />
             ) : isAuthenticated && isOnboarded ? (
-              <Layout showSidebar={true}>
+              <Layout>
                 {/* <HelloPage /> */}
                 <ChatPage />
               </Layout>

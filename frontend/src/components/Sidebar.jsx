@@ -12,7 +12,7 @@ import {
 import useLogout from "../hooks/useLogout";
 import ThemeSelector from "./ThemeSelector";
 
-const Sidebar = ({ isCompact = false }) => {
+const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
   const { logoutMutation } = useLogout();
   const { authUser } = useAuthUser();
   const location = useLocation();
@@ -43,8 +43,13 @@ const Sidebar = ({ isCompact = false }) => {
   ];
 
   return (
-    <aside className="w-64 bg-base-200 border-r border-base-300 hidden md:flex flex-col h-screen sticky top-0">
-      {/* Logo */}
+    <aside
+      className={`
+        ${isCompact ? "w-20" : "w-64"} 
+        bg-base-200 border-r border-base-300 flex flex-col h-screen top-0 
+        ${mobile ? "fixed left-0 z-40" : ""}
+      `}
+    >
       <div className="p-5 border-b border-base-300 select-none flex items-center gap-2">
         <ShipWheelIcon className="size-9 text-primary" />
         {!isCompact && (
@@ -59,6 +64,7 @@ const Sidebar = ({ isCompact = false }) => {
           <Link
             key={to}
             to={to}
+            onClick={mobile ? onClose : undefined}
             className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
               currentPath === to ? "btn-active" : ""
             }`}
@@ -70,27 +76,29 @@ const Sidebar = ({ isCompact = false }) => {
       </nav>
 
       <div className="p-4 border-t border-base-300 mt-auto">
-        <div className="flex items-center gap-3">
+        <div
+          className={`flex ${
+            isCompact ? "flex-col" : "flex-row"
+          } justify-center items-center gap-3`}
+        >
           <div className="avatar">
             <div className="w-10 rounded-full">
-              <img
-                src={authUser?.profilePic || `../../public/i.png`}
-                alt="User Avatar"
-              />
+              <img src={authUser?.profilePic || "/i.png"} alt="User Avatar" />
             </div>
           </div>
+
           {!isCompact && (
-            <>
-              <div className="flex-1">
-                <p className="font-semibold text-sm">{authUser?.fullName}</p>
-                <p className="text-xs text-success flex items-center gap-1">
-                  <span className="size-2 rounded-full bg-success inline-block" />
-                  Online
-                </p>
-              </div>
-              <ThemeSelector />
-            </>
+            <div className="flex-1 text-center">
+              <p className="font-semibold text-sm">{authUser?.fullName}</p>
+              <p className="text-xs text-success flex items-center justify-center gap-1">
+                <span className="size-2 rounded-full bg-success inline-block" />
+                Online
+              </p>
+            </div>
           )}
+
+          <ThemeSelector />
+
           <button className="btn btn-ghost btn-circle" onClick={logoutMutation}>
             <LogOutIcon className="h-6 w-6 text-base-content opacity-70" />
           </button>

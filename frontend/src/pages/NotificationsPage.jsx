@@ -95,7 +95,7 @@ const NotificationsPage = () => {
               </section>
             )}
 
-            {/* ACCEPTED REQS NOTIFICATONS */}
+          
             {acceptedRequests.length > 0 && (
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
