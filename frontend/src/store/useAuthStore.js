@@ -38,4 +38,15 @@ export const useAuthStore = create((set) => ({
       set({ isCheckingAuth: false, isSignedIn: false, isLoading: false });
     }
   },
+  checkOutAuth: async () => {
+    set({
+      isCheckingAuth: false,
+      isLoading: false,
+      authUser: null,
+      isAuthenticated: false,
+      isSignedIn: false,
+      isOnBoarded: false,
+      isUpdatingProfile: false,
+    });
+  },
 }));

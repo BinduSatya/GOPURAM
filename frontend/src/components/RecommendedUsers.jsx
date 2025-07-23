@@ -47,10 +47,17 @@ const RecommendedUsers = () => {
     }
   }, [outgoingFriendReqs]);
 
-  const { mutate: sendRequestMutation, isPending } = useMutation({
+  const {
+    mutate: sendRequestMutation,
+    isPending,
+    isSuccess: rqstSent,
+  } = useMutation({
     mutationFn: sendFriendRequest,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] });
+      console.log(data);
+      outgoingFriendReqs.add(data.recipient);
+    },
   });
 
   const { mutate: acceptRequest, isPending: acceptingRequest } = useMutation({

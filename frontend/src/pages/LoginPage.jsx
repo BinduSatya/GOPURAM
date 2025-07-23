@@ -1,23 +1,32 @@
 import { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { login } from "../lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import useAuthUser from "../hooks/useAuthUser";
 // import useLogin from "../hooks/useLogin";
+import { useAuthStore } from "../store/useAuthStore.js";
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
-
+  const { checkAuth } = useAuthStore();
   // This is how we did it at first, without using our custom hook
+  // const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate: loginMutation, isPending } = useMutation({
     mutationFn: login,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-    onError: () => {
-      console.log("error occured");
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      // console.log("here inside");
+      checkAuth();
+      // navigate("/friends");
+    },
+
+    onError: (e) => {
+      console.log("error occured", e);
     },
   });
 

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useAuthUser from "../hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -11,9 +10,10 @@ import {
   ShipWheelIcon,
   ShuffleIcon,
 } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const OnboardingPage = () => {
-  const { authUser, checkAuth } = useAuthUser();
+  const { authUser, checkAuth } = useAuthStore();
 
   const queryClient = useQueryClient();
 
@@ -28,6 +28,7 @@ const OnboardingPage = () => {
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
     onSuccess: () => {
+      // console.log(data);
       toast.success("Profile onboarded successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
@@ -41,14 +42,11 @@ const OnboardingPage = () => {
     e.preventDefault();
     onboardingMutation(formState);
     checkAuth();
-    // let resp = await completeOnboarding(formState);
-    // console.log("Onboarding response:", resp);
   };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
+    const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-
     setFormState({ ...formState, profilePic: randomAvatar });
     toast.success("Random profile picture generated!");
   };

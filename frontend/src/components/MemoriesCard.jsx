@@ -3,7 +3,7 @@ import tripImg from "../../public/i.png";
 import { getCleanDay } from "../lib/utils";
 
 const MemoriesCard = ({ memory }) => {
-  console.log("memorycard", memory);
+  // console.log("memorycard", memory); 
   const day = getCleanDay(memory?.date);
 
   return (

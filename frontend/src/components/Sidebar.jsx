@@ -11,12 +11,14 @@ import {
 } from "lucide-react";
 import useLogout from "../hooks/useLogout";
 import ThemeSelector from "./ThemeSelector";
+import { useAuthStore } from "../store/useAuthStore.js";
 
 const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
   const { logoutMutation } = useLogout();
   const { authUser } = useAuthUser();
   const location = useLocation();
   const currentPath = location.pathname;
+  const { checkOutAuth } = useAuthStore();
 
   const navItems = [
     { to: "/", label: "Home", icon: <HomeIcon className="size-5" /> },
@@ -101,7 +103,13 @@ const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
 
           <ThemeSelector />
 
-          <button className="btn btn-ghost btn-circle" onClick={logoutMutation}>
+          <button
+            className="btn btn-ghost btn-circle"
+            onClick={() => {
+              checkOutAuth();
+              logoutMutation();
+            }}
+          >
             <LogOutIcon className="h-6 w-6 text-base-content opacity-70" />
           </button>
         </div>

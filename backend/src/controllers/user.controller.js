@@ -7,7 +7,7 @@ export async function getRecommendedUsers(req, res) {
     const currentUser = req.user;
 
     const pendingRequests = await FriendRequest.find({
-      $or: [{ sender: currentUserId }, { recipient: currentUserId }],
+      $or: [ { recipient: currentUserId }],
       status: "pending",
     }).select("sender recipient");
 

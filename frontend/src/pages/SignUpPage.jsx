@@ -3,6 +3,7 @@ import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
 
 import useSignUp from "../hooks/useSignUp";
+import { useAuthStore } from "../store/useAuthStore";
 
 const SignUpPage = () => {
   const [signupData, setSignupData] = useState({
@@ -11,26 +12,19 @@ const SignUpPage = () => {
     password: "",
   });
 
-  // This is how we did it at first, without using our custom hook
-  // const queryClient = useQueryClient();
-  // const {
-  //   mutate: signupMutation,
-  //   isPending,
-  //   error,
-  // } = useMutation({
-  //   mutationFn: signup,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  // });
+  const { checkAuth } = useAuthStore();
 
-  // This is how we did it using our custom hook - optimized version
-
-  const { isPending, error, signupMutation } = useSignUp();
+  const { isPending, error, signupMutation, isSuccess } = useSignUp();
 
   const handleSignup = (e) => {
     e.preventDefault();
     signupMutation(signupData);
   };
 
+  if (isSuccess) {
+    console.log("into issuccess");
+    checkAuth();
+  }
   return (
     <div
       className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"

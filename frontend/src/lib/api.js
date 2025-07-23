@@ -1,10 +1,8 @@
 import { axiosInstance } from "./axios";
-import { useAuthStore } from "../store/useAuthStore";
 // import { io } from "socket.io-client";
 // import { useAuthStore } from "../store/useAuthStore";
 // import { useSocketStore } from "../store/useSocketStore";
 
-const { checkAuth } = useAuthStore;
 // const { socket } = useSocketStore;
 // const socket = io("http://localhost:3000", { withCredentials: true });
 
@@ -12,9 +10,8 @@ export const signup = async (signupData) => {
   // const { authUser } = useAuthStore;
   const response = await axiosInstance.post("/auth/signup", signupData);
   if (response?.data.success) {
-    console.log("response is", response);
-    checkAuth();
     console.log("after check auth");
+    return response?.data?.user;
   }
   return response?.data;
 };
@@ -22,9 +19,9 @@ export const signup = async (signupData) => {
 export const login = async (loginData) => {
   const response = await axiosInstance.post("/auth/login", loginData);
   console.log("response?.data", response?.data?.user);
-  if (response?.data.success) {
+  if (response?.data?.success) {
     console.log("before check auth");
-    checkAuth();
+    // checkAuth;
     console.log("after check auth");
     return response.data.user;
   }
@@ -33,6 +30,7 @@ export const login = async (loginData) => {
 
 export const logout = async () => {
   const response = await axiosInstance.post("/auth/logout");
+  console.log("logged out data", response.data);
   return response.data;
 };
 
@@ -62,6 +60,7 @@ export const getRecipient = async (id) => {
 
 export const completeOnboarding = async (userData) => {
   const response = await axiosInstance.post("/auth/onboarding", userData);
+  // console.log(response.data.user);
   return response.data;
 };
 
@@ -126,7 +125,7 @@ export async function acceptFriendRequest(requestId) {
 
 export const getAllMemories = async () => {
   const response = await axiosInstance.get("/memories/all");
-  console.log("response from memroes", response.data.message);
+  // console.log("response from memroes", response.data.message);
   return response.data.message;
 };
 
