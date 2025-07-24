@@ -7,18 +7,21 @@ export async function getRecommendedUsers(req, res) {
     const currentUser = req.user;
 
     const pendingRequests = await FriendRequest.find({
-      $or: [ { recipient: currentUserId }],
+      $or: [{ recipient: currentUserId }, { sender: currentUserId }],
       status: "pending",
     }).select("sender recipient");
+    console.log("pending reqs", pendingRequests);
 
-    const requestUserIds = pendingRequests.flatMap((req) => [
-      req.sender.toString(),
-      req.recipient.toString(),
+    const requestUserIds = pendingRequests.flatMap((requ) => [
+      requ.sender,
+      requ.recipient,
     ]);
+
+    console.log("requesting user ids", requestUserIds);
 
     const excludeIds = [
       currentUserId,
-      ...currentUser.friends.map((f) => f.toString()),
+      ...currentUser.friends.map((f) => f),
       ...requestUserIds,
     ];
 
@@ -27,9 +30,70 @@ export async function getRecommendedUsers(req, res) {
       isOnboarded: true,
     });
 
-    return res.status(200).json({ success: true, recommendedUsers });
+    return res.status(200).json({
+      success: true,
+      recommendedUsers,
+    });
   } catch (error) {
     console.error("Error in getRecommendedUsers controller", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error (while getting recommended users)",
+    });
+  }
+}
+
+export async function getIncomingReqs(req, res) {
+  try {
+    const currentUserId = req.user._id;
+    const currentUser = req.user;
+
+    const pendingRequests = await FriendRequest.find({
+      recipient: currentUserId,
+      status: "pending",
+    }).select("sender");
+    console.log("pending reqs", pendingRequests);
+
+    const requestUserIds = pendingRequests.flatMap((req) => [
+      req.sender.toString(),
+      // req.recipient.toString(),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      incomingreqs: requestUserIds,
+    });
+  } catch (error) {
+    console.error("Error in getIncomingReqs controller", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error (while getting recommended users)",
+    });
+  }
+}
+
+export async function getOutgoingReqs(req, res) {
+  try {
+    const currentUserId = req.user._id;
+    const currentUser = req.user;
+
+    const pendingRequests = await FriendRequest.find({
+      sender: currentUserId,
+      status: "pending",
+    }).select("recipient");
+    console.log("pending reqs", pendingRequests);
+
+    const requestUserIds = pendingRequests.flatMap((req) => [
+      req.sender.toString(),
+      // req.recipient.toString(),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      outgoingReqs: requestUserIds,
+    });
+  } catch (error) {
+    console.error("Error in getOutgoingReqs controller", error.message);
     res.status(500).json({
       success: false,
       message: "Internal Server Error (while getting recommended users)",
@@ -172,14 +236,13 @@ export async function getFriendRequests(req, res) {
       recipient: req.user._id,
       status: "pending",
     }).populate("sender", "fullName profilePic learningSkill location");
-
     const acceptedReqs = await FriendRequest.find({
       sender: req.user._id,
       status: "accepted",
-    }).populate("recipient", "fullName profilePic learningSkill location");
-    console.log("incomingReqs", incomingReqs);
-    console.log("acceptedReqs", acceptedReqs);
-    res.status(200).json({ success: true, message: incomingReqs });
+    }).populate("sender", "fullName profilePic learningSkill location");
+    res
+      .status(200)
+      .json({ success: true, message: incomingReqs, acceptedReqs });
   } catch (error) {
     console.log("Error in getPendingFriendRequests controller", error.message);
     res.status(500).json({
@@ -191,10 +254,9 @@ export async function getFriendRequests(req, res) {
 export async function getOutgoingFriendReqs(req, res) {
   try {
     const outgoingRequests = await FriendRequest.find({
-      sender: req.user.id,
+      sender: req.user._id,
       status: "pending",
     }).populate("recipient", "fullName profilePic learningSkill location");
-
     res.status(200).json({ success: true, outgoingRequests });
   } catch (error) {
     console.log("Error in getOutgoingFriendReqs controller", error.message);

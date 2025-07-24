@@ -7,24 +7,48 @@ import {
   UserCheckIcon,
 } from "lucide-react";
 import NoNotificationsFound from "../components/NoNotificationsFound";
+import toast from "react-hot-toast";
 
 const NotificationsPage = () => {
   const queryClient = useQueryClient();
 
-  const { data: friendRequests, isLoading } = useQuery({
-    queryKey: ["friendRequests"],
+  // const { data: friendRequests, isLoading } = useQuery({
+  //   queryKey: ["incomingFriendReqs"],
+  //   queryFn: getFriendRequests,
+  // });
+
+  const { data: friendRequests = [], isLoading } = useQuery({
+    queryKey: ["incomingFriendReqs"],
     queryFn: getFriendRequests,
+    onError: () => {
+      console.log("error in fetching incoming-reqs");
+    },
   });
+
+  // const { mutate: acceptRequestMutation, isPending } = useMutation({
+  //   mutationFn: acceptFriendRequest,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(["incomingFriendReqs"]);
+  //     queryClient.invalidateQueries(["friends"]);
+  //   },
+  // });
 
   const { mutate: acceptRequestMutation, isPending } = useMutation({
     mutationFn: acceptFriendRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
+      console.log("success in accepting");
+      toast.success("Friend Request Accepted");
+      queryClient.invalidateQueries(["incomingFriendReqs"]);
+      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["friends"]);
+      queryClient.invalidateQueries(["outgoingFriendReqs"]);
+    },
+    onError: (e) => {
+      console.log("error occrured", e);
     },
   });
 
-  const incomingRequests = friendRequests?.incomingReqs || [];
+  const incomingRequests = friendRequests?.message || [];
   const acceptedRequests = friendRequests?.acceptedReqs || [];
 
   return (
@@ -95,7 +119,6 @@ const NotificationsPage = () => {
               </section>
             )}
 
-          
             {acceptedRequests.length > 0 && (
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold flex items-center gap-2">

@@ -12,6 +12,7 @@ import { UsersIcon } from "lucide-react";
 
 import RecommendedUsers from "../components/RecommendedUsers";
 import FriendCard from "../components/FriendCard";
+import PageLoader from "../components/PageLoader.jsx";
 import NoFriendsFound from "../components/NoFriendsFound";
 
 const HomePage = () => {
@@ -19,12 +20,6 @@ const HomePage = () => {
     queryKey: ["friends"],
     queryFn: getUserFriends,
   });
-
-  // const { mutate: sendRequestMutation, isPending } = useMutation({
-  //   mutationFn: sendFriendRequest,
-  //   onSuccess: () =>
-  //     queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
-  // });
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -42,6 +37,7 @@ const HomePage = () => {
         {loadingFriends ? (
           <div className="flex justify-center py-12">
             <span className="loading loading-spinner loading-lg" />
+            {/* <PageLoader /> */}
           </div>
         ) : friends.length === 0 ? (
           <NoFriendsFound />

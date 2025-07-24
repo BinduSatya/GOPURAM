@@ -66,7 +66,7 @@ export const completeOnboarding = async (userData) => {
 
 export async function getUserFriends() {
   const response = await axiosInstance.get("/users/friends");
-  // console.log("user friends are", response.data);
+  console.log("user friends are", response.data.friends);
   if (response.data.success) {
     return response.data.friends;
   } else {
@@ -77,6 +77,7 @@ export async function getUserFriends() {
 export async function getRecommendedUsers() {
   const response = await axiosInstance.get("/users/get-users");
   if (response.data.success) {
+    console.log("resp", response.data.recommendedUsers);
     return response.data.recommendedUsers;
   } else {
     return response.data.message;
@@ -86,6 +87,7 @@ export async function getRecommendedUsers() {
 export async function getOutgoingFriendReqs() {
   const response = await axiosInstance.get("/users/outgoing-friend-requests");
   if (response.data.success) {
+    console.log("outgoings reqs are", response.data.outgoingRequests);
     return response.data.outgoingRequests;
   } else {
     return response.data.message;
@@ -104,7 +106,8 @@ export async function sendFriendRequest(userId) {
 export async function getFriendRequests() {
   const response = await axiosInstance.get("/users/friend-requests");
   if (response.data.success) {
-    return response.data.message;
+    console.log("incoming reqs are", response.data.message);
+    return response.data;
   } else return null;
 }
 
