@@ -128,7 +128,6 @@ export async function acceptFriendRequest(requestId) {
 
 export const getAllMemories = async () => {
   const response = await axiosInstance.get("/memories/all");
-  // console.log("response from memroes", response.data.message);
   return response.data.message;
 };
 
