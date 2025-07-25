@@ -101,7 +101,9 @@ const RecommendedUsers = () => {
                       <div className="avatar size-16 rounded-full">
                         <img
                           src={
-                            request.sender.profilePic || `../../public/user.png`
+                            loadingFriendRequests
+                              ? `/user.png`
+                              : request?.sender?.profilePic || `/user.png`
                           }
                           alt={request.sender.fullName}
                         />
@@ -154,8 +156,9 @@ const RecommendedUsers = () => {
                       <div className="avatar size-16 rounded-full">
                         <img
                           src={
-                            request.recipient.profilePic ||
-                            `../../public/user.png`
+                            loadingOutgoingFriends
+                              ? `/user.png`
+                              : request?.recipient?.profilePic || `/user.png`
                           }
                           alt={request.recipient.fullName}
                         />
@@ -208,7 +211,7 @@ const RecommendedUsers = () => {
                     <div className="flex items-center gap-3">
                       <div className="avatar size-16 rounded-full">
                         <img
-                          src={user.profilePic || `/user.png`}
+                          src={user?.profilePic || `/user.png`}
                           alt={user.fullName}
                         />
                       </div>

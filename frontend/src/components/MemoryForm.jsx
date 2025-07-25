@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { postMemory } from "../lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
 
 const MemoryForm = ({ onClose }) => {
   const queryClient = useQueryClient();
+  const { authUser } = useAuthStore();
+  const today = new Date().toISOString().split("T")[0];
 
   const [form, setForm] = useState({
     tripName: "",
@@ -75,8 +78,9 @@ const MemoryForm = ({ onClose }) => {
               type="text"
               name="tripName"
               value={form.tripName}
+              autoComplete="off"
               onChange={handleChange}
-              className="border rounded p-2 bg-base-200"
+              className="flex-1 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent bg-base-100 border border-neutral-300 text-base-content"
               //   required
             />
           </label>
@@ -85,9 +89,10 @@ const MemoryForm = ({ onClose }) => {
             <input
               type="text"
               name="ownerName"
-              value={form.ownerName}
+              value={authUser.fullName}
               onChange={handleChange}
-              className="border rounded p-2 bg-base-200"
+              autoComplete="off"
+              className="flex-1 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent bg-base-100 border border-neutral-300 text-base-content"
               //   required
             />
           </label>
@@ -97,8 +102,10 @@ const MemoryForm = ({ onClose }) => {
               type="date"
               name="date"
               value={form.date}
+              max={today}
+              autoComplete="off"
               onChange={handleChange}
-              className="border rounded p-2 bg-base-200"
+              className="flex-1 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent bg-base-100 border border-neutral-300 text-base-content"
               //   required
             />
           </label>
@@ -107,9 +114,10 @@ const MemoryForm = ({ onClose }) => {
             <input
               type="url"
               name="link"
+              autoComplete="off"
               value={form.link}
               onChange={handleChange}
-              className="border rounded p-2 bg-base-200"
+              className="flex-1 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent bg-base-100 border border-neutral-300 text-base-content"
               //   required
             />
           </label>
@@ -128,20 +136,20 @@ const MemoryForm = ({ onClose }) => {
               name="ownerName"
               value={form.ownerName}
               onChange={handleChange}
-              className="border rounded p-2 bg-base-200"
-              //   required
+              autoComplete="off"
+              className="flex-1 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent bg-base-100 border border-neutral-300 text-base-content"
             />
           </label>
           <div className="flex w-full gap-2">
             <button
               type="submit"
-              className="btn btn-accent  w-1/2 p-2 hover:bg-primary"
+              className="btn btn-accent  rounded-full  w-1/2 p-2 hover:bg-primary"
             >
               Submit
             </button>
             <button
               type="button"
-              className="btn btn-secondary w-1/2 p-2 hover:bg-warning"
+              className="btn btn-secondary  rounded-full w-1/2 p-2 hover:bg-warning"
               onClick={onClose}
             >
               Close

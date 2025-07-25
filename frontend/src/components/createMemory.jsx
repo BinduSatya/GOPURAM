@@ -14,10 +14,13 @@ const CreateMemory = () => {
   return (
     <>
       <div
-        className="flex items-center justify-center rounded-lg cursor-pointer bg-secondary hover:bg-accent px-3 py-2"
+        className="flex items-center justify-center rounded-lg cursor-pointer 
+             bg-secondary text-secondary-content
+             hover:bg-accent hover:text-accent-content 
+             px-3 py-2"
         onClick={handleClick}
       >
-        <div className="text-4xl">+</div>
+        <div className="text-4xl"> +</div>
       </div>
       {create && <MemoryForm onClose={handleClose} />}
     </>

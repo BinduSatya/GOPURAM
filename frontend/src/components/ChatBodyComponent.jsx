@@ -5,6 +5,7 @@ import { getCleanTime } from "../lib/utils";
 import { useSocketStore } from "../store/useSocketStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { X } from "lucide-react"; // ✅ Close icon
+import NoMessages from "./NoMessages";
 
 const ChatBodyComponent = ({ id, reciver }) => {
   const queryClient = useQueryClient();
@@ -62,7 +63,7 @@ const ChatBodyComponent = ({ id, reciver }) => {
       ) : messagesError ? (
         <p>Error loading messages.</p>
       ) : messages.length === 0 ? (
-        <p>No messages yet.</p>
+        <NoMessages user={reciver} />
       ) : (
         messages.map((msg) => {
           const isSender = msg.senderId === senderId;

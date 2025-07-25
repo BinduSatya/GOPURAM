@@ -4,7 +4,7 @@ const ChatHeader = ({ reciever }) => {
       <header className="py-2 select-none px-3 bg-base-300 opacity-90 text-lg font-bold flex gap-4 items-center ">
         <img
           className={`w-10 h-10`}
-          src={`${reciever.profilePic || "../../public/user.png"}`}
+          src={`${reciever?.profilePic || "/user.png"}`}
           alt=""
         />
         Chatting with {reciever.fullName}

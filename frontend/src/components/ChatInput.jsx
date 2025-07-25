@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postMessage } from "../lib/api";
 import { useState } from "react";
-import { SendHorizonal, Image as ImageIcon, X } from "lucide-react";
+import { SendHorizonal, Image as ImageIcon, X, Loader2 } from "lucide-react";
 import { useSocketStore } from "../store/useSocketStore";
 
 const ChatInput = ({ id }) => {
@@ -19,15 +19,17 @@ const ChatInput = ({ id }) => {
 
   const { mutate: sendMsg, isLoading: sending } = useMutation({
     mutationFn: (newMsg) => postMessage(newMsg, socket),
-    onLoading: () => {
-      setLoading(true);
-    },
     onSuccess: () => {
       setMessageText("");
       setImageFile(null);
       setPreviewUrl(null);
       setLoading(false);
       queryClient.invalidateQueries(["chat-messages", id]);
+    },
+    onMutate: () => {
+      setMessageText("");
+      setImageFile(null);
+      setPreviewUrl(null);
     },
   });
 
@@ -76,6 +78,7 @@ const ChatInput = ({ id }) => {
           <button onClick={removeImage} className="text-alert hover:text-error">
             <X />
           </button>
+          
         </div>
       )}
 

@@ -39,9 +39,6 @@ const NotificationsPage = () => {
       console.log("success in accepting");
       toast.success("Friend Request Accepted");
       queryClient.invalidateQueries(["incomingFriendReqs"]);
-      queryClient.invalidateQueries(["users"]);
-      queryClient.invalidateQueries(["friends"]);
-      queryClient.invalidateQueries(["outgoingFriendReqs"]);
     },
     onError: (e) => {
       console.log("error occrured", e);

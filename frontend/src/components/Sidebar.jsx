@@ -87,7 +87,7 @@ const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
         >
           <div className="avatar">
             <div className="w-10 rounded-full">
-              <img src={authUser?.profilePic || "/i.png"} alt="User Avatar" />
+              <img src={authUser?.profilePic || "/user.png"} alt="User Avatar" />
             </div>
           </div>
 
