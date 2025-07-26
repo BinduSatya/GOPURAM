@@ -1,28 +1,25 @@
 import { useState } from "react";
-import { ShipWheelIcon } from "lucide-react";
+import { Eye, EyeOff, ShipWheelIcon, TentTree } from "lucide-react";
 import { Link } from "react-router-dom";
 import { login } from "../lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import useAuthUser from "../hooks/useAuthUser";
-// import useLogin from "../hooks/useLogin";
 import { useAuthStore } from "../store/useAuthStore.js";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const { checkAuth } = useAuthStore();
-  // This is how we did it at first, without using our custom hook
-  // const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate: loginMutation, isPending } = useMutation({
     mutationFn: login,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      // console.log("here inside");
+      toast.success("Logged in Successfully");
       checkAuth();
-      // navigate("/friends");
     },
 
     onError: (e) => {
@@ -30,12 +27,8 @@ const LoginPage = () => {
     },
   });
 
-  // This is how we did it using our custom hook - optimized version
-  // const { isPending, error, loginMutation } = useLogin();
-
   const handleLogin = (e) => {
     e.preventDefault();
-    // login(loginData);
     loginMutation(loginData);
   };
 
@@ -47,18 +40,11 @@ const LoginPage = () => {
       <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
         <div className="w-full lg:w-1/2 p-4 sm:p-8 flex flex-col">
           <div className="mb-4 flex items-center justify-start gap-2">
-            <ShipWheelIcon className="size-9 text-primary" />
+            <TentTree className="size-9 text-primary" />
             <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary  tracking-wider">
               GOPURAM
             </span>
           </div>
-
-          {/* ERROR MESSAGE DISPLAY */}
-          {/* {error && (
-            <div className="alert alert-error mb-4">
-              <span>{error.response.data.message}</span>
-            </div>
-          )} */}
 
           <div className="w-full">
             <form onSubmit={handleLogin}>
@@ -89,12 +75,12 @@ const LoginPage = () => {
                     />
                   </div>
 
-                  <div className="form-control w-full space-y-2">
+                  <div className="form-control w-full space-y-2 relative">
                     <label className="label">
                       <span className="label-text">Password</span>
                     </label>
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
                       className="input input-bordered w-full"
                       value={loginData.password}
@@ -103,12 +89,21 @@ const LoginPage = () => {
                       }
                       required
                     />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-11 text-gray-500 hover:text-primary"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? <EyeOff /> : <Eye />}
+                    </button>
                   </div>
 
                   <button
                     type="submit"
                     className="btn btn-primary w-full"
-                    disabled={isPending}
+                    disabled={
+                      isPending || !loginData.email || !loginData.password
+                    }
                   >
                     {isPending ? (
                       <>
@@ -137,10 +132,8 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* IMAGE SECTION */}
         <div className="hidden lg:flex w-full lg:w-1/2 bg-primary/10 items-center justify-center">
           <div className="max-w-md p-8">
-            {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
               <img
                 src="../../public/i.png"
@@ -151,10 +144,10 @@ const LoginPage = () => {
 
             <div className="text-center space-y-3 mt-6">
               <h2 className="text-xl font-semibold">
-                Connect with language partners worldwide
+                Connect with Gopuram vasis Nationwide
               </h2>
               <p className="opacity-70">
-                Have Converstaions, make friends, and improve skills together.
+                Have Conversations, make friends, and improve your social Skills
               </p>
             </div>
           </div>

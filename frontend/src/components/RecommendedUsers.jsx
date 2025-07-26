@@ -144,8 +144,8 @@ const RecommendedUsers = () => {
             })}
           {/* </div> */}
           {outgoingFriendReqs.length > 0 &&
-            // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             outgoingFriendReqs.map((request) => {
+              console.log("request", request);
               return (
                 <div
                   key={request._id}
@@ -160,18 +160,20 @@ const RecommendedUsers = () => {
                               ? `/user.png`
                               : request?.recipient?.profilePic || `/user.png`
                           }
-                          alt={request.recipient.fullName}
+                          alt={
+                            request?.recipient?.fullName || request.recipient
+                          }
                         />
                       </div>
 
                       <div>
                         <h3 className="font-semibold text-lg">
-                          {request.recipient.fullName}
+                          {request?.recipient?.fullName || request?.recipient}
                         </h3>
-                        {request.recipient.location && (
+                        {request?.recipient?.location && (
                           <div className="flex items-center text-xs opacity-70 mt-1">
                             <MapPinIcon className="size-3 mr-1" />
-                            {request.recipient.location}
+                            {request?.recipient?.location}
                           </div>
                         )}
                       </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShipWheelIcon } from "lucide-react";
+import { Eye, EyeOff, ShipWheelIcon, TentTree } from "lucide-react";
 import { Link } from "react-router";
 
 import useSignUp from "../hooks/useSignUp";
@@ -10,7 +10,10 @@ const SignUpPage = () => {
     fullName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { checkAuth } = useAuthStore();
 
@@ -31,11 +34,9 @@ const SignUpPage = () => {
       data-theme="forest"
     >
       <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
-        {/* SIGNUP FORM - LEFT SIDE */}
         <div className="w-full lg:w-1/2 p-4 sm:p-8 flex flex-col">
-          {/* LOGO */}
           <div className="mb-4 flex items-center justify-start gap-2">
-            <ShipWheelIcon className="size-9 text-primary" />
+            <TentTree className="size-9 text-primary" />
             <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
               GOPURAM
             </span>
@@ -53,13 +54,10 @@ const SignUpPage = () => {
               <div className="space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold">Create an Account</h2>
-                  <p className="text-sm opacity-70">
-                    Join Streamify and start your language learning adventure!
-                  </p>
+                  <p className="text-sm opacity-70">Join Gopuram!</p>
                 </div>
 
                 <div className="space-y-3">
-                  {/* FULLNAME */}
                   <div className="form-control w-full">
                     <label className="label">
                       <span className="label-text">Full Name</span>
@@ -78,7 +76,7 @@ const SignUpPage = () => {
                       required
                     />
                   </div>
-                  {/* EMAIL */}
+
                   <div className="form-control w-full">
                     <label className="label">
                       <span className="label-text">Email</span>
@@ -94,15 +92,15 @@ const SignUpPage = () => {
                       required
                     />
                   </div>
-                  {/* PASSWORD */}
-                  <div className="form-control w-full">
+
+                  <div className="form-control w-full relative">
                     <label className="label">
                       <span className="label-text">Password</span>
                     </label>
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="********"
-                      className="input input-bordered w-full"
+                      className="input input-bordered w-full pr-10"
                       value={signupData.password}
                       onChange={(e) =>
                         setSignupData({
@@ -112,33 +110,74 @@ const SignUpPage = () => {
                       }
                       required
                     />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-11 text-gray-500 hover:text-primary"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? <EyeOff /> : <Eye />}
+                    </button>
                     <p className="text-xs opacity-70 mt-1">
                       Password must be at least 6 characters long
                     </p>
                   </div>
 
-                  <div className="form-control">
-                    <label className="label cursor-pointer justify-start gap-2">
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-sm"
-                        required
-                      />
-                      <span className="text-xs leading-tight">
-                        I agree to the{" "}
-                        <span className="text-primary hover:underline">
-                          terms of service
-                        </span>{" "}
-                        and{" "}
-                        <span className="text-primary hover:underline">
-                          privacy policy
-                        </span>
-                      </span>
+                  <div className="form-control w-full relative">
+                    <label className="label">
+                      <span className="label-text">Confirm Password</span>
                     </label>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="********"
+                      className={`input input-bordered w-full ${
+                        signupData.confirmPassword
+                          ? signupData.password === signupData.confirmPassword
+                            ? "input-success"
+                            : "input-error"
+                          : ""
+                      }`}
+                      value={signupData.confirmPassword}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-11 text-gray-500 hover:text-primary"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    >
+                      {showConfirmPassword ? <EyeOff /> : <Eye />}
+                    </button>
+                    {signupData.confirmPassword && (
+                      <p
+                        className={`text-xs mt-1 ${
+                          signupData.password === signupData.confirmPassword
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {signupData.password === signupData.confirmPassword
+                          ? "Passwords match"
+                          : "Passwords do not match"}
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                <button className="btn btn-primary w-full" type="submit">
+                <button
+                  className="btn btn-primary w-full"
+                  type="submit"
+                  disabled={
+                    isPending ||
+                    signupData.password !== signupData.confirmPassword ||
+                    !signupData.fullName ||
+                    !signupData.email
+                  }
+                >
                   {isPending ? (
                     <>
                       <span className="loading loading-spinner loading-xs"></span>
@@ -151,7 +190,7 @@ const SignUpPage = () => {
 
                 <div className="text-center mt-4">
                   <p className="text-sm">
-                    Already have an account?{" "}
+                    Already have an account?
                     <Link to="/login" className="text-primary hover:underline">
                       Sign in
                     </Link>
@@ -162,10 +201,8 @@ const SignUpPage = () => {
           </div>
         </div>
 
-        {/* SIGNUP FORM - RIGHT SIDE */}
         <div className="hidden lg:flex w-full lg:w-1/2 bg-primary/10 items-center justify-center">
           <div className="max-w-md p-8">
-            {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
               <img
                 src="/i.png"
@@ -176,11 +213,10 @@ const SignUpPage = () => {
 
             <div className="text-center space-y-3 mt-6">
               <h2 className="text-xl font-semibold">
-                Connect with language partners worldwide
+                Connect with Gopuram vasis Nationwide
               </h2>
               <p className="opacity-70">
-                Practice conversations, make friends, and improve your language
-                skills together
+                Have Conversations, make friends, and improve your social Skills
               </p>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import TripMemory from "../models/TripMemory.model.js";
 
 export const getAllMemory = async (req, res) => {
@@ -13,19 +14,33 @@ export const getAllMemory = async (req, res) => {
 
 export const postMemory = async (req, res) => {
   try {
-    console.log("Memory endpoint hit", req.body);
-    const { tripName, ownerName, date, link, image } = req.body;
+    console.log("Posting Memory endpoint hit", req.body);
+    const { tripName, ownerName, date, link } = req.body;
     // if (!tripName || !ownerName || !date || !link) {
     //   return res
     //     .status(400)
-    //     .json({ success: false, message: "Data not filled" });
+    //     .json({ success: false, message: "Data not filled" });g
     // }
+    let imageUrl = "";
+    if (req.file) {
+      const uploadResponse = await cloudinary.uploader.upload(
+        `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+          "base64"
+        )}`,
+        {
+          folder: "memories",
+        }
+      );
+      imageUrl = uploadResponse.secure_url;
+      console.log("Image uploaded successfully:", imageUrl);
+    }
+
     const newMemory = await TripMemory.create({
       tripName,
       ownerName,
       date,
       link,
-      image,
+      image: imageUrl,
     });
     return res.status(201).json({
       success: true,

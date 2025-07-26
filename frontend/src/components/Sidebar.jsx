@@ -5,21 +5,25 @@ import {
   FerrisWheel,
   HomeIcon,
   LogOutIcon,
-  ShipWheelIcon,
+  TentTree,
+  // ShipWheelIcon,
   UsersIcon,
   Video,
 } from "lucide-react";
 import useLogout from "../hooks/useLogout";
 import ThemeSelector from "./ThemeSelector";
 import { useAuthStore } from "../store/useAuthStore.js";
+import toast from "react-hot-toast";
 
 const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
-  const { logoutMutation } = useLogout();
+  const { logoutMutation, onSuccess } = useLogout();
+  if (onSuccess) {
+    toast.onSuccess("Logged out successfullt");
+  }
   const { authUser } = useAuthUser();
   const location = useLocation();
   const currentPath = location.pathname;
   const { checkOutAuth } = useAuthStore();
-
   const navItems = [
     { to: "/", label: "Home", icon: <HomeIcon className="size-5" /> },
     {
@@ -48,13 +52,17 @@ const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
     <aside
       className={`
         ${isCompact ? "w-20" : "w-64"} 
-        bg-base-200 border-r border-base-300 flex flex-col h-screen top-0 
+        bg-base-200 border-r border-base-300 flex flex-col select-none h-screen top-0 
         ${mobile ? "fixed left-0 z-40" : ""}
       `}
     >
-      <div className="p-5 border-b border-base-300 select-none flex items-center gap-2">
-        <Link to="/" onClick={mobile ? onClose : undefined}>
-          <ShipWheelIcon className="size-9 text-primary" />
+      <div className="p-5 border-b border-base-300">
+        <Link
+          to="/"
+          onClick={mobile ? onClose : undefined}
+          className="flex flex-row gap-2"
+        >
+          <TentTree className="size-9 text-primary" />
           {!isCompact && (
             <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
               GOPURAM
@@ -87,7 +95,10 @@ const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
         >
           <div className="avatar">
             <div className="w-10 rounded-full">
-              <img src={authUser?.profilePic || "/user.png"} alt="User Avatar" />
+              <img
+                src={authUser?.profilePic || "/user.png"}
+                alt="User Avatar"
+              />
             </div>
           </div>
 
