@@ -15,6 +15,7 @@ import { connectDB } from "./lib/db.js";
 
 const app = express();
 const server = http.createServer(app);
+const userIdsToSocketIds = new Map();
 
 const io = new Server(server, {
   cors: {
@@ -25,12 +26,26 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("New User Connected", socket.id);
-  io.emit("welcome", `New User Connected, ${socket.id}`);
-  socket.on("send-message", (msgDetails) => {
-    console.log(
-      `messge data is ${msgDetails.senderId}, ${msgDetails.messageText}`
-    );
-    socket.broadcast.emit("recieved-message");
+  socket.on("register-user", (userId) => {
+    userIdsToSocketIds.set(userId, socket.id);
+    console.log(`User with id: ${userId} is having a socket Id ${socket.id}`);
+    socket.broadcast.emit("welcome", `New User Connected, ${socket.id}`);
+  });
+
+  socket.on("send-message", (recieverID) => {
+    if (recieverID === "gopuram") {
+      socket.on("send-gopuram-message", (data) => {
+        console.log("gopuram message is ", data);
+        socket.broadcast.emit("recieved-message");
+      });
+    }
+    const targetSocketId = userIdsToSocketIds.get(recieverID);
+    console.log("targetSocketId is", targetSocketId);
+    if (targetSocketId) {
+      socket.to(targetSocketId).emit("recieved-message");
+    } else {
+      console.log(`User ${recieverID} is not connected`);
+    }
   });
 
   socket.on("disconnect", () => {

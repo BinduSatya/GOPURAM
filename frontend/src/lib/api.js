@@ -119,13 +119,6 @@ export async function acceptFriendRequest(requestId) {
   return response.data.message;
 }
 
-// export async function getStreamToken() {
-//   const response = await axiosInstance.get("/chat/token");
-//   return response.data;
-// }
-// /users/friend-requests
-// /users/memories-form
-
 export const getAllMemories = async () => {
   const response = await axiosInstance.get("/memories/all");
   return response.data.message;
@@ -141,8 +134,8 @@ export const postMemory = async (memoryData) => {
 
 export const getMessages = async (id) => {
   const response = await axiosInstance.get(`/chat/${id}`);
-
   if (response.data.success) {
+    console.log("messages are", response.data.messages);
     return response.data.messages;
   } else {
     return response.data.message;
@@ -151,10 +144,24 @@ export const getMessages = async (id) => {
 
 export const postMessage = async (msgDetails, socket) => {
   const response = await axiosInstance.post(`/chat/send-message`, msgDetails);
-  socket.emit("send-message", msgDetails);
+  let receiverId = msgDetails.get("receiverId");
+  console.log("receiverId is", receiverId);
+  socket.emit("send-message", receiverId);
   if (response.data.success) {
     return response.data.message;
   } else {
     return response.data.message;
   }
 };
+
+// export const postGopuramMessage = async (msgDetails, socket) => {
+//   const response = await axiosInstance.post(`/chat/gopuram`, msgDetails);
+//   let senderId = msgDetails.get("senderId");
+//   console.log("senderId is", senderId);
+//   socket.emit("send-gopuram-message");
+//   if (response.data.success) {
+//     return response.data.message;
+//   } else {
+//     return response.data.message;
+//   }
+// };

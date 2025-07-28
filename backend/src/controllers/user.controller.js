@@ -104,16 +104,24 @@ export async function getOutgoingReqs(req, res) {
 export async function getUserById(req, res) {
   try {
     const userId = req.params.id;
+    let user;
     console.log("backend id", userId);
-    const user = await User.findById(userId)
-      .select("-password -friends") // Exclude password and friends from response
-      .populate("friends", "fullName profilePic learningSkill location");
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+    if (userId === "gopuram") {
+      user = {
+        fullName: "Gopuram",
+      };
+      return res.status(200).json({ success: true, user });
+    } else {
+      user = await User.findById(userId)
+        .select("-password -friends") // Exclude password and friends from response
+        .populate("friends", "fullName profilePic learningSkill location");
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+      return res.status(200).json({ success: true, user });
     }
-    return res.status(200).json({ success: true, user });
   } catch (error) {
     console.error("Error in getUserById controller", error.message);
     return res.status(500).json({

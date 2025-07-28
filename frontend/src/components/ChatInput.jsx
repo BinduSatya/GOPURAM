@@ -50,7 +50,9 @@ const ChatInput = ({ id }) => {
     if (newMsg.imageFile) {
       formData.append("imageFile", imageFile);
     }
-    sendMsg(formData);
+    if (receiverId === "gopuram") {
+      sendMsg(formData);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -78,7 +80,6 @@ const ChatInput = ({ id }) => {
           <button onClick={removeImage} className="text-alert hover:text-error">
             <X />
           </button>
-          
         </div>
       )}
 

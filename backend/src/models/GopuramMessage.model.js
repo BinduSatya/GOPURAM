@@ -1,15 +1,11 @@
 import mongoose from "mongoose";
 
-const messageSchema = new mongoose.Schema(
+const groupSchema = new mongoose.Schema(
   {
     senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    },
-    receiverId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
     },
     text: {
       type: String,
@@ -21,5 +17,5 @@ const messageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Message = mongoose.model("Message", messageSchema);
-export default Message;
+const GopuramMessage = mongoose.model("Group", groupSchema);
+export default GopuramMessage;

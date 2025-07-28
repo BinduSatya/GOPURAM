@@ -7,8 +7,11 @@ const NoMessages = ({ user }) => {
         <MessageSquarePlus className="size-8 text-base-content opacity-40" />
       </div>
       <h3 className="text-lg font-semibold mb-2">No Messages yet</h3>
+
       <p className="text-base-content opacity-70 max-w-md">
-        Start a convo between you and {user?.fullName}
+        {user?.fullName === "gopuram"
+          ? `Start a convo in Gopuram`
+          : `Start a convo between you and ${user?.fullName}`}
       </p>
     </div>
   );

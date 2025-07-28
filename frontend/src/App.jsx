@@ -158,7 +158,6 @@ const App = () => {
               <PageLoader />
             ) : isAuthenticated && isOnboarded ? (
               <Layout>
-                {/* <HelloPage /> */}
                 <ChatPage />
               </Layout>
             ) : (

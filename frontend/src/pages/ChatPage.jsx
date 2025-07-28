@@ -5,12 +5,17 @@ import ChatBodyComponent from "../components/ChatBodyComponent";
 import ChatHeader from "../components/ChatHeader";
 import ChatInput from "../components/ChatInput";
 import ChatLoader from "../components/ChatLoader";
+import { useSocketStore } from "../store/useSocketStore";
 
 const ChatPage = () => {
   const { id } = useParams();
-  const chatId = id;
-  const users = chatId.split("&");
-  const receiverId = users[1];
+  let chatId, users, receiverId;
+  chatId = id;
+  users = chatId.split("&");
+  receiverId = users[1];
+  const { socket } = useSocketStore();
+  socket.emit("register-user", users[0]);
+  socket.on("welcome", (data) => console.log(data));
 
   const {
     data: recipient,
@@ -34,7 +39,7 @@ const ChatPage = () => {
           <ChatHeader reciever={recipient} />
 
           <div className="flex-1 overflow-y-auto px-2 py-3 bg-base-100">
-            <ChatBodyComponent id={chatId} reciver={recipient} />
+            <ChatBodyComponent id={chatId} receiver={recipient} />
           </div>
 
           <div className="border-red">

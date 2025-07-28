@@ -4,12 +4,13 @@ import { getMessages } from "../lib/api";
 import { getCleanTime } from "../lib/utils";
 import { useSocketStore } from "../store/useSocketStore";
 import { useAuthStore } from "../store/useAuthStore";
-import { X } from "lucide-react"; // ✅ Close icon
+import { X } from "lucide-react";
 import NoMessages from "./NoMessages";
 
-const ChatBodyComponent = ({ id, reciver }) => {
+const ChatBodyComponent = ({ id, receiver }) => {
   const queryClient = useQueryClient();
   const chatId = id;
+
   const users = chatId.split("&");
   const senderId = users[0];
   const { authUser } = useAuthStore();
@@ -25,7 +26,7 @@ const ChatBodyComponent = ({ id, reciver }) => {
     error: messagesError,
   } = useQuery({
     queryKey: ["chat-messages", id],
-    queryFn: () => getMessages(id, socket),
+    queryFn: () => getMessages(id),
   });
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const ChatBodyComponent = ({ id, reciver }) => {
       ) : messagesError ? (
         <p>Error loading messages.</p>
       ) : messages.length === 0 ? (
-        <NoMessages user={reciver} />
+        <NoMessages user={receiver} />
       ) : (
         messages.map((msg) => {
           const isSender = msg.senderId === senderId;
@@ -82,7 +83,9 @@ const ChatBodyComponent = ({ id, reciver }) => {
                     src={
                       isSender
                         ? authUser.profilePic || `../../public/user.png`
-                        : reciver.profilePic || `../../public/user.png`
+                        : receiver.fullName === "gopuram"
+                        ? receiver.profilePic
+                        : `../../public/user.png`
                     }
                   />
                 </div>
@@ -95,7 +98,7 @@ const ChatBodyComponent = ({ id, reciver }) => {
                 </div>
               ) : (
                 <div className="chat-header flex gap-2 items-end">
-                  {reciver.fullName}
+                  {receiver.fullName}
                   <time className="text-xs opacity-50 select-none">{time}</time>
                 </div>
               )}
