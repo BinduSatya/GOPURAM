@@ -18,7 +18,7 @@ export const getMessages = async (req, res) => {
         .json({ success: false, message: "Sender or receiver not found" });
     }
     if (receiverId == "gopuram") {
-      const messages = await GopuramMessage.find().sort({ createdAt: 1 });
+      messages = await GopuramMessage.find().sort({ createdAt: 1 });
     } else {
       messages = await Message.find({
         $or: [

@@ -3,19 +3,19 @@ import { acceptFriendRequest, getFriendRequests } from "../lib/api";
 import {
   BellIcon,
   ClockIcon,
+  Link,
   MessageSquareIcon,
+  UserCheck,
   UserCheckIcon,
 } from "lucide-react";
 import NoNotificationsFound from "../components/NoNotificationsFound";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { getCleanDay } from "../lib/utils";
 
 const NotificationsPage = () => {
   const queryClient = useQueryClient();
-
-  // const { data: friendRequests, isLoading } = useQuery({
-  //   queryKey: ["incomingFriendReqs"],
-  //   queryFn: getFriendRequests,
-  // });
+  const navigate = useNavigate();
 
   const { data: friendRequests = [], isLoading } = useQuery({
     queryKey: ["incomingFriendReqs"],
@@ -24,14 +24,6 @@ const NotificationsPage = () => {
       console.log("error in fetching incoming-reqs");
     },
   });
-
-  // const { mutate: acceptRequestMutation, isPending } = useMutation({
-  //   mutationFn: acceptFriendRequest,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries(["incomingFriendReqs"]);
-  //     queryClient.invalidateQueries(["friends"]);
-  //   },
-  // });
 
   const { mutate: acceptRequestMutation, isPending } = useMutation({
     mutationFn: acceptFriendRequest,
@@ -45,7 +37,7 @@ const NotificationsPage = () => {
     },
   });
 
-  const incomingRequests = friendRequests?.message || [];
+  const incomingRequests = friendRequests?.incomingReqs || [];
   const acceptedRequests = friendRequests?.acceptedReqs || [];
 
   return (
@@ -82,7 +74,7 @@ const NotificationsPage = () => {
                           <div className="flex items-center gap-3">
                             <div className="avatar w-14 h-14 rounded-full bg-base-300">
                               <img
-                                src={request.sender.profilePic}
+                                src={request.sender.profilePic || "/user.png"}
                                 alt={request.sender.fullName}
                               />
                             </div>
@@ -127,13 +119,15 @@ const NotificationsPage = () => {
                   {acceptedRequests.map((notification) => (
                     <div
                       key={notification._id}
-                      className="card bg-base-200 shadow-sm"
+                      className="card bg-base-200 shadow-sm "
                     >
                       <div className="card-body p-4">
                         <div className="flex items-start gap-3">
                           <div className="avatar mt-1 size-10 rounded-full">
                             <img
-                              src={notification.recipient.profilePic}
+                              src={
+                                notification.recipient.profilePic || "/user.png"
+                              }
                               alt={notification.recipient.fullName}
                             />
                           </div>
@@ -146,11 +140,18 @@ const NotificationsPage = () => {
                               friend request
                             </p>
                             <p className="text-xs flex items-center opacity-70">
-                              <ClockIcon className="h-3 w-3 mr-1" />
-                              Recently
+                              <UserCheck className="h-3 w-3 mr-1" />
+                              {getCleanDay(notification.updatedAt)}
                             </p>
                           </div>
-                          <div className="badge badge-success">
+                          <div
+                            className="badge badge-success cursor-pointer"
+                            onClick={() =>
+                              navigate(
+                                `/message/${notification.sender}&${notification.recipient._id}`
+                              )
+                            }
+                          >
                             <MessageSquareIcon className="h-3 w-3 mr-1" />
                             New Friend
                           </div>

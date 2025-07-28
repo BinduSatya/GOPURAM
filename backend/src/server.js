@@ -34,17 +34,15 @@ io.on("connection", (socket) => {
 
   socket.on("send-message", (recieverID) => {
     if (recieverID === "gopuram") {
-      socket.on("send-gopuram-message", (data) => {
-        console.log("gopuram message is ", data);
-        socket.broadcast.emit("recieved-message");
-      });
-    }
-    const targetSocketId = userIdsToSocketIds.get(recieverID);
-    console.log("targetSocketId is", targetSocketId);
-    if (targetSocketId) {
-      socket.to(targetSocketId).emit("recieved-message");
+      socket.broadcast.emit("recieved-message");
     } else {
-      console.log(`User ${recieverID} is not connected`);
+      const targetSocketId = userIdsToSocketIds.get(recieverID);
+      console.log("targetSocketId is", targetSocketId);
+      if (targetSocketId) {
+        socket.to(targetSocketId).emit("recieved-message");
+      } else {
+        console.log(`User ${recieverID} is not connected`);
+      }
     }
   });
 

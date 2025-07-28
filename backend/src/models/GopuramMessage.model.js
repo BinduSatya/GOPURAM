@@ -7,6 +7,11 @@ const groupSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "GopuramMessage",
+      required: false,
+    },
     text: {
       type: String,
     },
@@ -17,5 +22,5 @@ const groupSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const GopuramMessage = mongoose.model("Group", groupSchema);
+const GopuramMessage = mongoose.model("GopuramMessage", groupSchema);
 export default GopuramMessage;

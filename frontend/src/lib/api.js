@@ -107,7 +107,7 @@ export async function getFriendRequests() {
   const response = await axiosInstance.get("/users/friend-requests");
   if (response.data.success) {
     console.log("incoming reqs are", response.data.message);
-    return response.data;
+    return response.data.message;
   } else return null;
 }
 

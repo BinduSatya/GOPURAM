@@ -49,7 +49,7 @@ const RecommendedUsers = () => {
         console.log("error in fetching incoming-reqs");
       },
     });
-  console.log(incomingFriendReqs.message);
+  console.log("incomingFriendReqs areada", incomingFriendReqs.incomingReqs);
 
   const { mutate: sendRequestMutation, isLoading: isPending } = useMutation({
     mutationFn: sendFriendRequest,
@@ -89,8 +89,8 @@ const RecommendedUsers = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {incomingFriendReqs.message.length > 0 &&
-            incomingFriendReqs.message.map((request) => {
+          {incomingFriendReqs.incomingReqs.length > 0 &&
+            incomingFriendReqs.incomingReqs.map((request) => {
               return (
                 <div
                   key={request._id}

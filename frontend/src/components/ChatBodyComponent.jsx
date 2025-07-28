@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { getMessages } from "../lib/api";
+import { getMessages, getRecipient } from "../lib/api";
 import { getCleanTime } from "../lib/utils";
 import { useSocketStore } from "../store/useSocketStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -10,14 +10,12 @@ import NoMessages from "./NoMessages";
 const ChatBodyComponent = ({ id, receiver }) => {
   const queryClient = useQueryClient();
   const chatId = id;
-
   const users = chatId.split("&");
   const senderId = users[0];
   const { authUser } = useAuthStore();
-
   const messagesEndRef = useRef(null);
   const socket = useSocketStore((state) => state.socket);
-
+  const [recipientMap, setRecipientMap] = useState({});
   const [previewImage, setPreviewImage] = useState(null);
 
   const {
@@ -30,9 +28,44 @@ const ChatBodyComponent = ({ id, receiver }) => {
   });
 
   useEffect(() => {
+    let isMounted = true;
+    if (users[1] === "gopuram") {
+      const loadRecipients = async () => {
+        const unknownIds = new Set();
+        messages.forEach((msg) => {
+          if (!recipientMap[msg.senderId]) {
+            unknownIds.add(msg.senderId);
+          }
+        });
+
+        const recipients = await Promise.all(
+          Array.from(unknownIds).map(getRecipient)
+        );
+
+        const map = {};
+        recipients.forEach((user) => {
+          if (user) map[user._id] = user;
+        });
+
+        if (isMounted) {
+          setRecipientMap((prev) => ({ ...prev, ...map }));
+        }
+      };
+
+      if (messages.length > 0) {
+        loadRecipients();
+      }
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [messages, recipientMap]);
+
+  useEffect(() => {
     if (!socket) return;
     const handleMessage = () => {
-      queryClient.invalidateQueries({ queryKey: ["chat-messages", id] });
+      queryClient.invalidateQueries(["chat-messages", id]);
     };
     socket.on("recieved-message", handleMessage);
     return () => {
@@ -70,6 +103,10 @@ const ChatBodyComponent = ({ id, receiver }) => {
           const isSender = msg.senderId === senderId;
           const time =
             getCleanTime(msg.updatedAt) || getCleanTime(msg.createdAt);
+          const isGroupMessage = msg.receiverId === undefined;
+          const user = isGroupMessage
+            ? recipientMap[msg.senderId]
+            : receiver;
 
           return (
             <div
@@ -77,36 +114,27 @@ const ChatBodyComponent = ({ id, receiver }) => {
               className={`chat ${isSender ? "chat-end" : "chat-start"}`}
             >
               <div className="chat-image avatar">
-                <div className="w-10 rounded-full ">
+                <div className="w-10 rounded-full">
                   <img
                     alt="User profile"
                     src={
                       isSender
-                        ? authUser.profilePic || `../../public/user.png`
-                        : receiver.fullName === "gopuram"
-                        ? receiver.profilePic
-                        : `../../public/user.png`
+                        ? authUser.profilePic || "/user.png"
+                        : user?.profilePic || "/user.png"
                     }
                   />
                 </div>
               </div>
 
-              {isSender ? (
-                <div className="chat-header flex gap-2  items-end">
-                  <time className="text-xs opacity-50 select-none">{time}</time>
-                  {authUser.fullName}
-                </div>
-              ) : (
-                <div className="chat-header flex gap-2 items-end">
-                  {receiver.fullName}
-                  <time className="text-xs opacity-50 select-none">{time}</time>
-                </div>
-              )}
+              <div className="chat-header flex gap-2 items-end">
+                {user?.fullName || "Unknown"}
+                <time className="text-xs opacity-50 select-none">{time}</time>
+              </div>
 
               {msg?.text && msg?.image ? (
                 <>
                   <div
-                    className={`m-2 rounded-lg shadow-lg${
+                    className={`m-2 rounded-lg shadow-lg ${
                       isSender
                         ? "bg-accent text-accent-content"
                         : "bg-neutral text-neutral-content"
@@ -167,7 +195,7 @@ const ChatBodyComponent = ({ id, receiver }) => {
           <div className="relative">
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-80 "
+              className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-80"
             >
               <X className="w-6 h-6" />
             </button>
