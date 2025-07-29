@@ -3,7 +3,6 @@ import tripImg from "../../public/i.png";
 import { getCleanDay } from "../lib/utils";
 
 const MemoriesCard = ({ memory }) => {
-  // console.log("memorycard", memory); 
   const day = getCleanDay(memory?.date);
 
   return (
@@ -13,7 +12,7 @@ const MemoriesCard = ({ memory }) => {
       rel="noopener noreferrer"
       className="cursor-pointer text-base-100 text-xs break-all select-none"
     >
-      <div className="transition cursor-pointer bg-base-100  image-full w-auto shadow-sm hover:scale-105 hover:shadow-lg hover:opacity-100 active:scale-95 card card-border">
+      <div className="transition cursor-pointer bg-base-300 image-full w-auto shadow-sm hover:scale-105 hover:shadow-lg hover:opacity-100 active:scale-95 card card-border">
         <figure>
           <img
             src={

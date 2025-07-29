@@ -21,7 +21,7 @@ function JoinScreen({ getMeetingAndToken }) {
           <h2 className="card-title text-center">Join a Meeting</h2>
           <input
             type="text"
-            placeholder="Enter Meeting ID"
+            placeholder="Enter On-Going Meeting ID"
             value={meetingId}
             onChange={(e) => setMeetingId(e.target.value)}
             className="input input-bordered w-full"
