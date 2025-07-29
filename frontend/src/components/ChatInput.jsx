@@ -50,9 +50,7 @@ const ChatInput = ({ id }) => {
     if (newMsg.imageFile) {
       formData.append("imageFile", imageFile);
     }
-    if (receiverId === "gopuram") {
-      sendMsg(formData);
-    }
+    sendMsg(formData);
   };
 
   const handleImageChange = (e) => {

@@ -143,6 +143,8 @@ export const getMessages = async (id) => {
 };
 
 export const postMessage = async (msgDetails, socket) => {
+  console.log("came to post message");
+
   const response = await axiosInstance.post(`/chat/send-message`, msgDetails);
   let receiverId = msgDetails.get("receiverId");
   console.log("receiverId is", receiverId);
