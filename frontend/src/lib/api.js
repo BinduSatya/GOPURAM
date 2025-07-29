@@ -154,14 +154,19 @@ export const postMessage = async (msgDetails, socket) => {
   }
 };
 
-// export const postGopuramMessage = async (msgDetails, socket) => {
-//   const response = await axiosInstance.post(`/chat/gopuram`, msgDetails);
-//   let senderId = msgDetails.get("senderId");
-//   console.log("senderId is", senderId);
-//   socket.emit("send-gopuram-message");
-//   if (response.data.success) {
-//     return response.data.message;
-//   } else {
-//     return response.data.message;
-//   }
-// };
+export const authToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiJjYTcwY2E0ZS01ODczLTRiY2QtODdjYS1mNzIzMjNkOWExZTgiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTc1Mzc3MTQ3OSwiZXhwIjoxNzY5MzIzNDc5fQ.FUlyEMWv5QCDCziaJVxl_q3BY-H3t8-zn49nE2twUEk";
+
+export const createMeeting = async ({ token }) => {
+  const res = await fetch(`https://api.videosdk.live/v2/rooms`, {
+    method: "POST",
+    headers: {
+      authorization: `${authToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+  //Destructuring the roomId from the response
+  const { roomId } = await res.json();
+  return roomId;
+};

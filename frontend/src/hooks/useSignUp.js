@@ -12,6 +12,9 @@ const useSignUp = () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       console.log("on success");
     },
+    onError: (e) => {
+      toast.error(e.response.data.message);
+    },
   });
 
   return { isPending, error, signupMutation: mutate, isSuccess };

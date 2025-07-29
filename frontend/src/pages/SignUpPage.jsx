@@ -17,7 +17,7 @@ const SignUpPage = () => {
 
   const { checkAuth } = useAuthStore();
 
-  const { isPending, error, signupMutation, isSuccess } = useSignUp();
+  const { isPending, signupMutation, isSuccess } = useSignUp();
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -41,13 +41,6 @@ const SignUpPage = () => {
               GOPURAM
             </span>
           </div>
-
-          {/* ERROR MESSAGE IF ANY */}
-          {error && (
-            <div className="alert alert-error mb-4">
-              <span>{error.response.data.message}</span>
-            </div>
-          )}
 
           <div className="w-full">
             <form onSubmit={handleSignup}>

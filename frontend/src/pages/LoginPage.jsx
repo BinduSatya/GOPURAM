@@ -24,6 +24,7 @@ const LoginPage = () => {
 
     onError: (e) => {
       console.log("error occured", e);
+      toast.error(`${e.response.data.message}`);
     },
   });
 

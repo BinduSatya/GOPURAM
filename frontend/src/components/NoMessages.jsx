@@ -9,7 +9,7 @@ const NoMessages = ({ user }) => {
       <h3 className="text-lg font-semibold mb-2">No Messages yet</h3>
 
       <p className="text-base-content opacity-70 max-w-md">
-        {user?.fullName === "gopuram"
+        {user?.fullName === "Gopuram"
           ? `Start a convo in Gopuram`
           : `Start a convo between you and ${user?.fullName}`}
       </p>

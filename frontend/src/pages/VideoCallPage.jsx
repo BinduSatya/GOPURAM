@@ -1,4 +1,5 @@
-import { BellIcon, VideoOff, Wrench } from "lucide-react";
+import { VideoOff, Wrench } from "lucide-react";
+import VideoCallComponent from "../components/VideoCallComponent";
 
 const VideoCallPage = () => {
   return (
@@ -9,6 +10,7 @@ const VideoCallPage = () => {
             Make Group Call
           </h2>
         </div>
+        <VideoCallComponent />
         {/* */}
         <div className="flex flex-col items-center justify-center py-3 text-center">
           <div className="size-16 rounded-full bg-base-300 flex items-center justify-center mb-4">

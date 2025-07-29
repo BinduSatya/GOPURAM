@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useAuthStore } from "../store/useAuthStore";
 
-const GroupChat = () => {
+const GroupChatCard = () => {
   const { authUser } = useAuthStore();
   console.log("authUser", authUser);
   const chatLink = authUser._id + "&" + "gopuram";
@@ -11,7 +11,7 @@ const GroupChat = () => {
       <div className="card-body p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="avatar size-12 accent-content">
-            <img src="/gopuram.png" alt="gopuram" srcset="" />
+            <img src="/gopuram.png" alt="gopuram" />
           </div>
           <h3 className="font-semibold truncate">Group Chat (Gopuram)</h3>
         </div>
@@ -30,4 +30,4 @@ const GroupChat = () => {
   );
 };
 
-export default GroupChat;
+export default GroupChatCard;
