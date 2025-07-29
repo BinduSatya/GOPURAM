@@ -198,8 +198,8 @@ const SignUpPage = () => {
           <div className="max-w-md p-8">
             <div className="relative aspect-square max-w-sm mx-auto">
               <img
-                src="/i.png"
-                alt="Language connection illustration"
+                src="/gopuram.png"
+                alt="Gopuram Icon"
                 className="w-full h-full"
               />
             </div>
@@ -208,9 +208,7 @@ const SignUpPage = () => {
               <h2 className="text-xl font-semibold">
                 Connect with Gopuram vasis Nationwide
               </h2>
-              <p className="opacity-70">
-                Have Conversations, make friends, and improve your social Skills
-              </p>
+              <p className="opacity-70">Have Beautiful Conversations</p>
             </div>
           </div>
         </div>

@@ -137,8 +137,8 @@ const LoginPage = () => {
           <div className="max-w-md p-8">
             <div className="relative aspect-square max-w-sm mx-auto">
               <img
-                src="../../public/i.png"
-                alt="Gopuram Joining Image"
+                src="/gopuram.png"
+                alt="Gopuram Icon"
                 className="w-full h-full"
               />
             </div>
