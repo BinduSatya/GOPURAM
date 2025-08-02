@@ -19,12 +19,8 @@ const userIdsToSocketIds = new Map();
 
 const io = new Server(server, {
   cors: {
-    // origin: process.env.CORS,
-    origin: [
-      "http://localhost:5173",
-      "https://gopuram.vercel.app",
-      "https://gopuram-production.up.railway.app",
-    ],
+    origin: process.env.CORS,
+    // origin: ["http://localhost:5173", "https://gopuram.vercel.app/"],
     credentials: true,
   },
 });
@@ -67,16 +63,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 // const allowedOrigins = ["http://localhost:5173", "https://gopuram.vercel.app/"];
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://gopuram.vercel.app",
-      "https://gopuram-production.up.railway.app",
-    ],
-    credentials: true,
-  })
-);
+app.use(cors({ origin: process.env.CORS, credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
