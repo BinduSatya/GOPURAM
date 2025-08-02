@@ -123,7 +123,7 @@ For production builds:
 npm run build
 ```
 
-Deploy the `dist/` folder to your preferred hosting (e.g., Vercel, Netlify).
+Deploy the `dist/` folder to your preferred hosting (e.g., Railway, Vercel, Netlify).
 
 ---
 
@@ -131,13 +131,6 @@ Deploy the `dist/` folder to your preferred hosting (e.g., Vercel, Netlify).
 
 - **VITE_API_URL**: Backend API base URL (set in `.env`)
 - **Other VITE\_\*** variables as needed for third-party integrations
-
----
-
-## ESLint & TypeScript
-
-- ESLint is configured for code quality.
-- For production, TypeScript is recommended. See [Vite React TS Template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts).
 
 ---
 

@@ -168,7 +168,7 @@ CORS (Cross-Origin Resource Sharing) is configured in `server.js` to allow reque
 import cors from "cors";
 app.use(
   cors({
-    origin: process.env.CORS, // e.g., ["http://localhost:5173", "https://gopuram.vercel.app/"]
+    origin: process.env.CORS, 
     credentials: true,
   })
 );
