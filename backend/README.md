@@ -1,20 +1,19 @@
-# Backend Documentation
+# Gopuram Backend Documentation
 
-This backend powers the Gopuram app, providing RESTful APIs for authentication, user management, chat, and memories. It uses Node.js, Express, MongoDB (via Mongoose), JWT for authentication, and integrates with Stream and Cloudinary for chat and media.
+This backend powers the Gopuram app, providing RESTful APIs for authentication, user management, chat, and memories. It uses Node.js, Express, MongoDB (via Mongoose), JWT for authentication, and integrates with Cloudinary for media uploads. Real-time chat is powered by Socket.io.
 
 ---
 
 ## Folder Structure
 
 - **src/**
-  - **server.js**: Main Express server setup and route mounting.
-  - **controllers/**: Route logic for authentication, users, and chat.
-  - **lib/**: Utility libraries (DB connection, Cloudinary, Stream).
-  - **middleware/**: Custom Express middlewares (auth).
-  - **models/**: Mongoose models for User, FriendRequest, Message, TripMemory.
-  - **routes/**: Express route definitions for auth, user, chat.
+  - **server.js**: Main Express server setup, CORS configuration, Socket.io, and route mounting.
+  - **controllers/**: Route logic for authentication, users, chat, and memories.
+  - **lib/**: Utility libraries (DB connection, Cloudinary).
+  - **middleware/**: Custom Express middlewares (auth, multer for file uploads).
+  - **models/**: Mongoose models for User, FriendRequest, Message, GopuramMessage, TripMemory.
+  - **routes/**: Express route definitions for auth, user, chat, memories.
 - **.env**: Environment variables (DB URI, JWT secret, API keys).
-- **vercel.json**: Vercel deployment config.
 
 ---
 
@@ -55,7 +54,7 @@ Tracks friend requests between users.
 
 ---
 
-### 3. Message Model ([src/models/Messge.model.js](src/models/Messge.model.js))
+### 3. Message Model ([src/models/Message.model.js](src/models/Message.model.js))
 
 Stores chat messages.
 
@@ -68,7 +67,20 @@ Stores chat messages.
 
 ---
 
-### 4. TripMemory Model ([src/models/TripMemory.model.js](src/models/TripMemory.model.js))
+### 4. GopuramMessage Model ([src/models/GopuramMessage.model.js](src/models/GopuramMessage.model.js))
+
+Stores group or special "Gopuram" messages.
+
+- **Fields:**
+  - `senderId` (ObjectId, required): User sending the message.
+  - `groupId` (ObjectId): Optional group reference.
+  - `text` (String): Message content.
+  - `image` (String): Optional image URL.
+  - **Timestamps:** Tracks when the message was sent.
+
+---
+
+### 5. TripMemory Model ([src/models/TripMemory.model.js](src/models/TripMemory.model.js))
 
 Stores user memories (e.g., trips).
 
@@ -81,43 +93,54 @@ Stores user memories (e.g., trips).
 
 ---
 
-## Routes & Controllers
+## Routing
 
-### Auth Routes ([src/routes/auth.route.js](src/routes/auth.route.js)), Controller ([src/controllers/auth.controller.js](src/controllers/auth.controller.js))
+All routes are defined using Express routers and are grouped by functionality.
 
-- `/api/auth/signup`: Registers a new user.
-- `/api/auth/login`: Authenticates user, returns JWT cookie.
-- `/api/auth/logout`: Logs out user (clears JWT).
-- `/api/auth/onboarding`: Completes user profile (requires JWT).
-- `/api/auth/me`: Returns current user info (requires JWT).
+### Auth Routes ([src/routes/auth.route.js](src/routes/auth.route.js))
 
-**Controller Logic:**  
-Handles validation, user creation, password hashing, JWT generation, onboarding updates, and logout.
+- `/api/auth/signup` (POST): Registers a new user.
+- `/api/auth/login` (POST): Authenticates user, returns JWT cookie.
+- `/api/auth/logout` (POST): Logs out user (clears JWT).
+- `/api/auth/onboarding` (POST): Completes user profile (requires JWT).
+- `/api/auth/me` (GET): Returns current user info (requires JWT).
+
+### User Routes ([src/routes/user.route.js](src/routes/user.route.js))
+
+- `/api/users/get-users` (GET): Get recommended users.
+- `/api/users/get-user/:id` (GET): Get user by ID.
+- `/api/users/incoming` (GET): Get incoming friend requests.
+- `/api/users/outgoing` (GET): Get outgoing friend requests.
+- `/api/users/friends` (GET): Get user's friends.
+- `/api/users/friend-requests` (GET): Get all friend requests.
+- `/api/users/outgoing-friend-requests` (GET): Get outgoing friend requests.
+- `/api/users/friend-request/:id` (POST): Send friend request.
+- `/api/users/friend-request/:id/accept` (PUT): Accept friend request.
+- `/api/users/memories-form` (POST): Add a new memory.
+
+### Chat Routes ([src/routes/chat.route.js](src/routes/chat.route.js))
+
+- `/api/chat/:id` (GET): Get messages with a user.
+- `/api/chat/send-message` (POST): Send a new message (supports image upload).
+- `/api/chat/get-messages` (GET): Get messages (general endpoint).
+
+### Memories Routes ([src/routes/memories.route.js](src/routes/memories.route.js))
+
+- `/api/memories/all` (GET): Get all memories.
+- `/api/memories/post-memory` (POST): Add a new memory (supports image upload).
 
 ---
 
-### User Routes ([src/routes/user.route.js](src/routes/user.route.js)), Controller ([src/controllers/user.controller.js](src/controllers/user.controller.js))
+## Controllers
 
-- `/api/users`: Get recommended users.
-- `/api/users/friends`: Get user's friends.
-- `/api/users/memories-form`: Add a new memory.
-- `/api/users/friend-request/:id`: Send friend request.
-- `/api/users/friend-request/:id/accept`: Accept friend request.
-- `/api/users/friend-requests`: Get incoming requests.
-- `/api/users/outgoing-friend-requests`: Get outgoing requests.
+Controllers contain the business logic for each route.
 
-**Controller Logic:**  
-Handles friend request creation/acceptance, fetching requests/friends, and storing memories.
+- **auth.controller.js**: Handles signup, login, logout, onboarding, and user info retrieval.
+- **user.controller.js**: Handles user search, friend requests (send, accept, list), friends list, and recommended users.
+- **chat.controller.js**: Handles message retrieval and sending, including image uploads and group messages.
+- **memories.controller.js**: Handles creation and retrieval of trip memories, including image uploads.
 
----
-
-### Chat Routes ([src/routes/chat.route.js](src/routes/chat.route.js)), Controller ([src/controllers/chat.controller.js](src/controllers/chat.controller.js))
-
-- `/api/chat/:id`: Get messages with a user.
-- `/api/chat/send-message`: Send a new message.
-
-**Controller Logic:**  
-Handles message retrieval and sending, integrates with Stream for chat/video tokens.
+Each controller validates input, interacts with models, and returns appropriate HTTP responses.
 
 ---
 
@@ -128,6 +151,30 @@ Handles message retrieval and sending, integrates with Stream for chat/video tok
 - **protectRoute:**  
   Checks for JWT in cookies, verifies it, and attaches the user to `req.user`.  
   Returns 401 if not authenticated.
+- Used on all protected routes to ensure only authenticated users can access sensitive endpoints.
+
+### Multer Middleware ([src/middleware/multer.file.js](src/middleware/multer.file.js))
+
+- **upload:**  
+  Handles file uploads in memory for image processing (used for chat and memories).
+
+---
+
+## CORS Configuration
+
+CORS (Cross-Origin Resource Sharing) is configured in `server.js` to allow requests from the frontend:
+
+```js
+import cors from "cors";
+app.use(
+  cors({
+    origin: process.env.CORS, // e.g., ["http://localhost:5173", "https://gopuram.vercel.app/"]
+    credentials: true,
+  })
+);
+```
+
+- Ensures secure communication between frontend and backend, especially for authentication cookies.
 
 ---
 
@@ -137,12 +184,8 @@ Contains utility modules:
 
 - **db.js:**  
   Connects to MongoDB using Mongoose. Uses URI from `.env`.
-
 - **cloudinary.js:**  
   Configures Cloudinary for image uploads. Uses credentials from `.env`.
-
-- **stream.js:**  
-  Integrates with Stream API for chat/video features. Uses API keys from `.env`.
 
 ---
 
@@ -153,8 +196,8 @@ Set in `.env`:
 - `MONGO_URI`: MongoDB connection string.
 - `JWT_SECRET_KEY`: JWT signing secret.
 - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`: Cloudinary credentials.
-- `STREAM_API_KEY`, `STREAM_API_SECRET`: Stream credentials.
 - `PORT`: Server port.
+- `CORS`: Allowed origins for CORS.
 
 ---
 
@@ -162,6 +205,18 @@ Set in `.env`:
 
 - All controllers catch errors and return appropriate HTTP status and messages.
 - Auth middleware returns 401 for unauthorized access.
+- Validation errors and missing resources return 400/404 status codes.
+
+---
+
+## Real-Time Chat
+
+- **Socket.io** is used for real-time messaging.
+- Users are mapped to socket IDs for direct message delivery.
+- Events:
+  - `register-user`: Registers a user with their socket ID.
+  - `send-message`: Sends a message to a specific user or group.
+  - `recieved-message`: Notifies clients to fetch new messages.
 
 ---
 
@@ -169,6 +224,7 @@ Set in `.env`:
 
 - Vercel config in `vercel.json` for serverless deployment.
 - Static files served from `/public`.
+- Environment variables must be set in your deployment dashboard.
 
 ---
 
@@ -176,9 +232,9 @@ Set in `.env`:
 
 1. **User signs up or logs in**: JWT cookie is set.
 2. **Protected routes**: Require JWT, checked by middleware.
-3. **User can send/accept friend requests, chat, and create memories**.
+3. **User can send/accept friend requests, chat, and create memories.**
 4. **Media uploads**: Handled via Cloudinary.
-5. **Chat/video**: Integrated with Stream API.
+5. **Real-time chat**: Socket.io used for instant message delivery.
 
 ---
 
@@ -187,6 +243,7 @@ Set in `.env`:
 - Add more endpoints in `routes` and `controllers`.
 - Add more fields to models as needed.
 - Integrate more third-party services in `lib`.
+- Enhance error handling and validation as needed.
 
 ---
 
@@ -196,4 +253,4 @@ Set in `.env`:
 - [Mongoose](https://mongoosejs.com/)
 - [JWT](https://jwt.io/)
 - [Cloudinary](https://cloudinary.com/)
-- [Stream](https://getstream.io/)
+- [Socket.io](https://socket.io/)
