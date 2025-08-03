@@ -1,6 +1,6 @@
 # Gopuram App
 
-Gopuram is a full-stack social platform that enables users to chat, video call, store and share memories, and interact with friends. Built with React (frontend) and Node.js/Express (backend), it uses MongoDB for data storage, Socket.io for real-time communication, and integrates with Cloudinary and VideoSDK for media and video calling features.
+Gopuram is a personalised full-stack social platform that enables users to chat, video call, store and share memories, and interact with friends. Built with React (frontend) and Node.js/Express (backend), it uses MongoDB for data storage, Socket.io for real-time communication, and integrates with Cloudinary and VideoSDK for media and video calling features.
 
 ---
 
