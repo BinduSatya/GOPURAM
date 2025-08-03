@@ -1,6 +1,6 @@
 # Gopuram App
 
-Gopuram is a full-stack social platform that enables users to chat, video call, store and share memories, and interact with friends. Built with React (frontend) and Node.js/Express (backend), it uses MongoDB for data storage, Socket.io for real-time communication, and integrates with Cloudinary and VideoSDK for media and video calling features.
+Gopuram is a personalised full-stack social platform that enables users to chat, video call, store and share memories, and interact with friends. Built with React (frontend) and Node.js/Express (backend), it uses MongoDB for data storage, Socket.io for real-time communication, and integrates with Cloudinary and VideoSDK for media and video calling features.
 
 ---
 
@@ -121,26 +121,6 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 - **Frontend**: Deploy the `frontend/dist` folder to Vercel, Netlify, or similar.
 - **Backend**: Deploy to Vercel (serverless), Heroku, or any Node server.
 - **Environment Variables**: Set all secrets in your deployment dashboard.
-
----
-
-## Contributing
-
-1. Fork the repo and create your branch.
-2. Make changes and commit.
-3. Open a pull request.
-
----
-
-## License
-
-MIT
-
----
-
-## Support
-
-For issues or feature requests, open an issue on GitHub or contact the maintainer.
 
 ---
 
