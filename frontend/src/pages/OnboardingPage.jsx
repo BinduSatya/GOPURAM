@@ -27,8 +27,9 @@ const OnboardingPage = () => {
 
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
-    onSuccess: () => {
-      toast.success("Profile onboarded successfully");
+
+    onSuccess: (data) => {
+      if (data?.success) toast.success("Profile onboarded successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
 
@@ -59,9 +60,7 @@ const OnboardingPage = () => {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* PROFILE PIC CONTAINER */}
             <div className="flex flex-col items-center justify-center space-y-4">
-              {/* IMAGE PREVIEW */}
               <div className="size-32 rounded-full bg-base-300 overflow-hidden">
                 {formState.profilePic ? (
                   <img
@@ -76,7 +75,6 @@ const OnboardingPage = () => {
                 )}
               </div>
 
-              {/* Generate Random Avatar BTN */}
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -89,7 +87,6 @@ const OnboardingPage = () => {
               </div>
             </div>
 
-            {/* FULL NAME */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Full Name</span>
@@ -122,9 +119,7 @@ const OnboardingPage = () => {
               />
             </div>
 
-            {/* LANGUAGES */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* LEARNING LANGUAGE */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Learning Skill</span>
@@ -174,12 +169,18 @@ const OnboardingPage = () => {
             >
               {!isPending ? (
                 <>
-                  <ShipWheelIcon className="size-5 mr-2" />
+                  {/* <ShipWheelIcon className="size-5 mr-2" /> */}
                   Complete Details
                 </>
               ) : (
                 <>
-                  <LoaderIcon className="animate-spin size-5 mr-2" />
+                  <img
+                    width="100"
+                    height="100"
+                    src="https://img.icons8.com/doodle/100/hourglass--v1.png"
+                    alt="hourglass--v1"
+                    className="size-5 mr-2"
+                  />
                   Here we go...
                 </>
               )}

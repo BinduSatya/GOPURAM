@@ -62,7 +62,12 @@ const Sidebar = ({ isCompact = false, mobile = false, onClose }) => {
           onClick={mobile ? onClose : undefined}
           className="flex flex-row gap-2"
         >
-          <TentTree className="size-9 text-primary" />
+          {/* <TentTree className="size-9 text-primary" /> */}
+          <img
+            src="temple-gopuram.svg"
+            alt="temple"
+            className="size-9 text-primary"
+          />
           {!isCompact && (
             <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
               GOPURAM
