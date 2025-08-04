@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { travelImage } from "/travel-memory.png";
 import { getCleanDay } from "../lib/utils";
 
 const MemoriesCard = ({ memory }) => {
@@ -19,7 +18,7 @@ const MemoriesCard = ({ memory }) => {
               memory.image === null ||
               memory.image === "" ||
               memory.image === "image place holder text"
-                ? "/travel-memory.png"
+                ? "travel-memory.png"
                 : memory.image
             }
           />
