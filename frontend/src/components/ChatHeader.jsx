@@ -6,7 +6,7 @@ const ChatHeader = ({ reciever }) => {
           className={`w-10 h-10`}
           src={
             reciever.fullName === "Gopuram"
-              ? "../../public/gopuram.png"
+              ? "https://img.icons8.com/doodle/100/conference-call.png"
               : `${reciever?.profilePic || "/user.png"}`
           }
           alt=""
