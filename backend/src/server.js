@@ -17,9 +17,13 @@ const app = express();
 const server = http.createServer(app);
 const userIdsToSocketIds = new Map();
 
+const allowedOrigins = process.env.CORS.split(",").map((origin) =>
+  origin.trim()
+);
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS,
+    origin: allowedOrigins,
     credentials: true,
   },
 });

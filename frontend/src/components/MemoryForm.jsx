@@ -20,17 +20,6 @@ const MemoryForm = ({ onClose }) => {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append("tripName", form.tripName);
-  //   formData.append("ownerName", authUser.fullName);
-  //   formData.append("date", form.date);
-  //   formData.append("link", form.link);
-  //   formData.append("image", croppedImage);
-  //   await mutateAsync(formData);
-  // };
-
   const [form, setForm] = useState({
     tripName: "",
     ownerName: "",
