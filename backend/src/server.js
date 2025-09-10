@@ -20,6 +20,8 @@ const userIdsToSocketIds = new Map();
 const allowedOrigins = process.env.CORS.split(",").map((origin) =>
   origin.trim()
 );
+console.log("Allowed origins:", allowedOrigins);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 const io = new Server(server, {
   cors: {
@@ -63,9 +65,6 @@ const __dirname = path.resolve();
 console.log(`__dirname: ${path.join(__dirname, "/public")}`);
 
 app.use(express.static(path.join(__dirname, "/public")));
-
-app.use(cors({ origin: allowedOrigins, credentials: true }));
-
 app.use(express.json());
 app.use(cookieParser());
 
