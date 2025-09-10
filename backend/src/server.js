@@ -64,7 +64,7 @@ console.log(`__dirname: ${path.join(__dirname, "/public")}`);
 
 app.use(express.static(path.join(__dirname, "/public")));
 
-app.use(cors({ origin: process.env.CORS, credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
