@@ -6,11 +6,12 @@ import {
   signup,
 } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import { connectDB } from "../lib/db.js";
 
 const router = express.Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
+router.post("/signup", connectDB, signup);
+router.post("/login", connectDB, login);
 router.post("/logout", logout);
 router.post("/onboarding", protectRoute, onboard);
 
