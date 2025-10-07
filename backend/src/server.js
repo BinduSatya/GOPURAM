@@ -65,7 +65,6 @@ app.set("io", io);
 
 // ==========================================================================
 
-// Basic setup
 const PORT = process.env.PORT || 3000;
 const __dirname = path.resolve();
 
@@ -77,13 +76,11 @@ app.get("/", (req, res) => {
   res.send("API is running....");
 });
 
-// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/memories", memoryRoutes);
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();

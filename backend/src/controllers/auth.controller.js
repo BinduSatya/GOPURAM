@@ -80,6 +80,7 @@ export async function signup(req, res) {
 export async function login(req, res) {
   try {
     const { email, password } = req.body;
+    console.log(email, password);
 
     if (!email || !password) {
       return res
@@ -88,6 +89,7 @@ export async function login(req, res) {
     }
 
     const user = await User.findOne({ email });
+    console.log("user is", user);
     if (!user)
       return res
         .status(401)

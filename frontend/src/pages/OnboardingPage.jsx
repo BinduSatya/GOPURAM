@@ -1,21 +1,15 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, Navigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { completeOnboarding } from "../lib/api";
-import {
-  CameraIcon,
-  LoaderIcon,
-  MapPinIcon,
-  ShipWheelIcon,
-  ShuffleIcon,
-} from "lucide-react";
+import { CameraIcon, MapPinIcon, ShuffleIcon } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
 const OnboardingPage = () => {
   const { authUser, checkAuth } = useAuthStore();
-
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [formState, setFormState] = useState({
     fullName: authUser?.fullName || "",
@@ -27,22 +21,22 @@ const OnboardingPage = () => {
 
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
-
     onSuccess: (data) => {
-      if (data?.success) toast.success("Profile onboarded successfully");
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      if (data?.success) {
+        toast.success("Profile onboarded successfully!");
+        queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        checkAuth();
+        navigate("/");
+      }
     },
-
     onError: (error) => {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     },
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     onboardingMutation(formState);
-    checkAuth();
-    Navigate("/");
   };
 
   const handleRandomAvatar = () => {
@@ -104,7 +98,6 @@ const OnboardingPage = () => {
               />
             </div>
 
-            {/* BIO */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Bio</span>
@@ -116,7 +109,7 @@ const OnboardingPage = () => {
                   setFormState({ ...formState, bio: e.target.value })
                 }
                 className="textarea textarea-bordered h-24"
-                placeholder="Tell others about yourself and your language learning goals"
+                placeholder="Tell others about yourself and your learning goals"
               />
             </div>
 
@@ -141,7 +134,6 @@ const OnboardingPage = () => {
               </div>
             </div>
 
-            {/* LOCATION */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Location</span>
@@ -161,18 +153,13 @@ const OnboardingPage = () => {
               </div>
             </div>
 
-            {/* SUBMIT BUTTON */}
-
             <button
               className="btn btn-primary w-full"
               disabled={isPending}
               type="submit"
             >
               {!isPending ? (
-                <>
-                  {/* <ShipWheelIcon className="size-5 mr-2" /> */}
-                  Complete Details
-                </>
+                <>Complete Details</>
               ) : (
                 <>
                   <img
@@ -192,4 +179,5 @@ const OnboardingPage = () => {
     </div>
   );
 };
+
 export default OnboardingPage;
