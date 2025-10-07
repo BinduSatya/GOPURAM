@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link, Navigate } from "react-router";
 import toast from "react-hot-toast";
-
 import { completeOnboarding } from "../lib/api";
 import {
   CameraIcon,
@@ -42,6 +42,7 @@ const OnboardingPage = () => {
     e.preventDefault();
     onboardingMutation(formState);
     checkAuth();
+    Navigate("/");
   };
 
   const handleRandomAvatar = () => {

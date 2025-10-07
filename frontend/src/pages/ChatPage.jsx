@@ -5,7 +5,7 @@ import ChatBodyComponent from "../components/ChatBodyComponent";
 import ChatHeader from "../components/ChatHeader";
 import ChatInput from "../components/ChatInput";
 import ChatLoader from "../components/ChatLoader";
-import { useSocketStore } from "../store/useSocketStore";
+// import { useSocketStore } from "../store/useSocketStore";
 
 const ChatPage = () => {
   const { id } = useParams();
@@ -13,9 +13,9 @@ const ChatPage = () => {
   chatId = id;
   users = chatId.split("&");
   receiverId = users[1];
-  const { socket } = useSocketStore();
-  socket.emit("register-user", users[0]);
-  socket.on("welcome", (data) => console.log(data));
+  // const { socket } = useSocketStore();
+  // socket.emit("register-user", users[0]);
+  // socket.on("welcome", (data) => console.log(data));
 
   const {
     data: recipient,

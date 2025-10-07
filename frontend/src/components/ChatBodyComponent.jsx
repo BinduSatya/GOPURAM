@@ -2,19 +2,19 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { getMessages, getRecipient } from "../lib/api";
 import { getCleanTime } from "../lib/utils";
-import { useSocketStore } from "../store/useSocketStore";
+// import { useSocketStore } from "../store/useSocketStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { X } from "lucide-react";
 import NoMessages from "./NoMessages";
 
 const ChatBodyComponent = ({ id, receiver }) => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const chatId = id;
   const users = chatId.split("&");
   const senderId = users[0];
   const { authUser } = useAuthStore();
   const messagesEndRef = useRef(null);
-  const socket = useSocketStore((state) => state.socket);
+  // const socket = useSocketStore((state) => state.socket);
   const [recipientMap, setRecipientMap] = useState({});
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -62,16 +62,16 @@ const ChatBodyComponent = ({ id, receiver }) => {
     };
   }, [messages, recipientMap]);
 
-  useEffect(() => {
-    if (!socket) return;
-    const handleMessage = () => {
-      queryClient.invalidateQueries(["chat-messages", id]);
-    };
-    socket.on("recieved-message", handleMessage);
-    return () => {
-      socket.off("recieved-message", handleMessage);
-    };
-  }, [socket, queryClient]);
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   const handleMessage = () => {
+  //     queryClient.invalidateQueries(["chat-messages", id]);
+  //   };
+  //   socket.on("recieved-message", handleMessage);
+  //   return () => {
+  //     socket.off("recieved-message", handleMessage);
+  //   };
+  // }, [socket, queryClient]);
 
   useEffect(() => {
     if (messagesEndRef.current) {

@@ -2,10 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postMessage } from "../lib/api";
 import { useState } from "react";
 import { SendHorizonal, Image as ImageIcon, X, Loader2 } from "lucide-react";
-import { useSocketStore } from "../store/useSocketStore";
+// import { useSocketStore } from "../store/useSocketStore";
 
 const ChatInput = ({ id }) => {
-  const socket = useSocketStore((state) => state.socket);
+  // const socket = useSocketStore((state) => state.socket);
   const chatId = id;
   const users = chatId.split("&");
   const senderId = users[0];
@@ -18,7 +18,8 @@ const ChatInput = ({ id }) => {
   const [loading, setLoading] = useState(false);
 
   const { mutate: sendMsg, isLoading: sending } = useMutation({
-    mutationFn: (newMsg) => postMessage(newMsg, socket),
+    // mutationFn: (newMsg) => postMessage(newMsg, socket),
+    mutationFn: (newMsg) => postMessage(newMsg),
     onSuccess: () => {
       setMessageText("");
       setImageFile(null);
