@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { getMessages, getRecipient } from "../lib/api";
 import { getCleanTime } from "../lib/utils";
@@ -104,9 +104,7 @@ const ChatBodyComponent = ({ id, receiver }) => {
           const time =
             getCleanTime(msg.updatedAt) || getCleanTime(msg.createdAt);
           const isGroupMessage = msg.receiverId === undefined;
-          const user = isGroupMessage
-            ? recipientMap[msg.senderId]
-            : receiver;
+          const user = isGroupMessage ? recipientMap[msg.senderId] : receiver;
 
           return (
             <div
