@@ -42,4 +42,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/memories", memoryRoutes);
 
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 5000}`);
+});
+
 export default app;
