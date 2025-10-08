@@ -11,6 +11,8 @@ export const connectDB = async () => {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
       bufferCommands: false,
     });
   }
@@ -18,10 +20,10 @@ export const connectDB = async () => {
   try {
     cached.conn = await cached.promise;
     console.log(`✅ MongoDB Connected: ${cached.conn.connection.host}`);
-    return `✅ MongoDB Connected: ${cached.conn.connection.host}`;
+    return cached.conn;
   } catch (err) {
     cached.conn = null;
     console.error("❌ MongoDB connection error:", err.message);
-    return `❌ MongoDB connection error: ${err.message}`;
+    throw err;
   }
 };

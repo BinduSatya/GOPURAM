@@ -12,18 +12,9 @@ import { connectDB } from "./lib/db.js";
 
 const app = express();
 
-const allowedOrigins = process.env.CORS.split(",").map((origin) =>
-  origin.trim()
-);
-console.log("Allowed origins:", allowedOrigins);
-// app.use(cors({ origin: allowedOrigins, credentials: true }));
-
+// ---------------- CORS Setup ----------------
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-
-    callback(null, true);
-  },
+  origin: true, // allow all origins
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -32,33 +23,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
+// ---------------- Middleware ----------------
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req, res) => res.send("API is running...."));
-app.get("/trying", (req, res) => res.send("API is running in trying...."));
-
-app.get("/api/test", async (req, res) => {
-  const dbRes = await connectDB();
-  res.json({ message: "API is working!", dbRes });
-});
-
-// Middleware to ensure DB connection for each request
-
+app.get("/", (req, res) => res.send("API is running..."));
+// DB connection middleware (serverless safe)
 app.use(async (req, res, next) => {
   try {
-    const dbRes = await connectDB();
-    console.log("Database connection response:", dbRes);
-    res
-      .status(200)
-      .json({ message: "Database connection successful", data: dbRes });
+    await connectDB();
+    next();
   } catch (err) {
-    console.log("Error connecting to database:", err);
-    res
-      .status(500)
-      .json({ message: "Database connection failed", error: err.message });
+    console.error("Error connecting to DB:", err.message);
+    res.status(500).json({ message: "Database connection failed" });
   }
 });
+
+// ---------------- Routes ----------------
+app.get("/test", (req, res) => res.send("API is running after db..."));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
