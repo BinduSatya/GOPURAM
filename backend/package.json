@@ -1,11 +1,11 @@
 {
   "name": "gopuram-backend",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/server.js",
+    "dev": "nodemon src/index.js",
     "install-deps": "npm install --omit=dev",
-    "start": "node src/server.js",
+    "start": "node src/index.js",
     "build": "echo 'Build complete'"
   },
   "keywords": [],

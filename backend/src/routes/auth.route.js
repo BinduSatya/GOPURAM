@@ -10,8 +10,8 @@ import { connectDB } from "../lib/db.js";
 
 const router = express.Router();
 
-router.post("/signup", connectDB, signup);
-router.post("/login", connectDB, login);
+router.post("/signup", signup);
+router.post("/login", login);
 router.post("/logout", logout);
 router.post("/onboarding", protectRoute, onboard);
 

@@ -72,6 +72,8 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 app.use(cookieParser());
 
+connectDB();
+
 app.get("/", (req, res) => {
   res.send("API is running....");
 });
@@ -83,5 +85,6 @@ app.use("/api/memories", memoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  connectDB();
 });
+
+export default app;
