@@ -8,7 +8,6 @@ const cached = global.mongoose;
 
 export const connectDB = async () => {
   if (cached.conn) {
-    console.log("🟢 Using existing MongoDB connection");
     return cached.conn;
   }
 
@@ -25,8 +24,8 @@ export const connectDB = async () => {
     console.log(`✅ MongoDB Connected: ${cached.conn.connection.host}`);
     return cached.conn;
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
     cached.conn = null;
+    console.error("❌ MongoDB connection error:", err.message);
     throw err;
   }
 };
