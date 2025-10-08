@@ -14,6 +14,10 @@ import {
 
 const router = express.Router();
 
+router.get("/", (req, res) => {
+  res.send("User route is working");
+});
+
 router.use(protectRoute);
 
 router.get("/get-users", getRecommendedUsers);

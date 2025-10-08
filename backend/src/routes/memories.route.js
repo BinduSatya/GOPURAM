@@ -7,6 +7,11 @@ import {
 } from "../controllers/memories.controller.js";
 
 const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.send("Memories route is working");
+});
+
 router.use(protectRoute);
 router.get("/all", getAllMemory);
 router.post("/post-memory", upload.single("image"), postMemory);
