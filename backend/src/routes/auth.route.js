@@ -6,7 +6,7 @@ import {
   signup,
 } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { connectDB } from "../lib/db.js";
+
 
 const router = express.Router();
 
