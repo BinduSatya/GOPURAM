@@ -38,12 +38,25 @@ app.use(cookieParser());
 app.get("/", (req, res) => res.send("API is running...."));
 app.get("/trying", (req, res) => res.send("API is running in trying...."));
 
+app.get("/api/test", async (req, res) => {
+  const dbRes = await connectDB();
+  res.json({ message: "API is working!", dbRes });
+});
+
+// Middleware to ensure DB connection for each request
+
 app.use(async (req, res, next) => {
   try {
-    await connectDB();
-    next();
+    const dbRes = await connectDB();
+    console.log("Database connection response:", dbRes);
+    res
+      .status(200)
+      .json({ message: "Database connection successful", data: dbRes });
   } catch (err) {
-    res.status(500).json({ message: "Database connection failed" });
+    console.log("Error connecting to database:", err);
+    res
+      .status(500)
+      .json({ message: "Database connection failed", error: err.message });
   }
 });
 
