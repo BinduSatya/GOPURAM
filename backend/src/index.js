@@ -39,7 +39,6 @@ app.use(async (req, res, next) => {
   }
 });
 
-// ---------------- Routes ----------------
 app.get("/test", (req, res) => res.send("API is running after db..."));
 
 app.use("/api/auth", authRoutes);
