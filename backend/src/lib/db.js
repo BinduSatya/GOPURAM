@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+if (!global.mongoose) {
+  global.mongoose = { conn: null, promise: null };
 }
+
+const cached = global.mongoose;
 
 export const connectDB = async () => {
   if (cached.conn) {
@@ -13,21 +13,20 @@ export const connectDB = async () => {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        bufferCommands: false,
-      })
-      .then((mongoose) => mongoose);
+    cached.promise = mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      bufferCommands: false,
+    });
   }
 
   try {
     cached.conn = await cached.promise;
     console.log(`✅ MongoDB Connected: ${cached.conn.connection.host}`);
     return cached.conn;
-  } catch (error) {
-    console.error("❌ MongoDB connection error:", error.message);
-    throw new Error("MongoDB connection failed");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err.message);
+    cached.conn = null;
+    throw err;
   }
 };
